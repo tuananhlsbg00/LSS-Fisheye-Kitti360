@@ -82,8 +82,9 @@ class CamEncode(nn.Module):
         return x
 
     def forward(self, x):
+        print('encoder input shape', x.shape)
         depth, x = self.get_depth_feat(x)
-
+        print('encoder output shape', x.shape)
         return x
 
 
