@@ -51,7 +51,7 @@ class KittiData(torch.utils.data.Dataset):
         self.dx, self.bx, self.nx = dx.numpy(), bx.numpy(), nx.numpy()
         self.bev_min = self.bx[0] - self.dx[0]/2
         self.bev_max = self.bev_min+self.dx[0]*self.nx[0]
-        self.z_max   =  self.bx[2] - self.dx[2]/2+self.dx[2]*self.nx[2]
+        self.z_max   =  self.bx[2] - self.dx[2]/2 - self.dx[2]*self.nx[2]
         self.cams = self.get_cams()
         self.T_additional = self.shift_origin()
         print(self)
