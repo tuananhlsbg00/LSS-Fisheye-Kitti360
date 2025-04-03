@@ -99,11 +99,11 @@ if __name__ == '__main__':
     ncams=2
     max_grad_norm=5.0
     pos_weight=2.13
-    logdir='./runs_2'
+    logdir='./runs'
 
     xbound=[-10.0, 10.0, 0.1]
     ybound=[-10.0, 10.0, 0.1]
-    zbound=[-2.0, 5.0, 7.0]
+    zbound=[  2.0, -2.0, 4.0]
     dbound=[1.0, 14.0, 0.325]
 
     is_aug=False

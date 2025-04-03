@@ -51,6 +51,7 @@ class KittiData(torch.utils.data.Dataset):
         self.dx, self.bx, self.nx = dx.numpy(), bx.numpy(), nx.numpy()
         self.bev_min = self.bx[0] - self.dx[0]/2
         self.bev_max = self.bev_min+self.dx[0]*self.nx[0]
+        self.z_max   =  self.bx[2] - self.dx[2]/2+self.dx[2]*self.nx[2]
         self.cams = self.get_cams()
         self.T_additional = self.shift_origin()
         print(self)
@@ -268,10 +269,12 @@ class KittiData(torch.utils.data.Dataset):
                 # Extract only the bottom face (4 points)
                 bottom4 = get_bottom_face(vertices_imu)
                 bottom4_xy = bottom4[:, :2]  # (4,2) shape
+                bottom_z = bottom4[:, 2]
 
                 # Ensure bounding box is within the BEV area
                 if (bottom4_xy[:, 0].max() < self.bev_min or bottom4_xy[:, 0].min() > self.bev_max or
-                    bottom4_xy[:, 1].max() < self.bev_min or bottom4_xy[:, 1].min() > self.bev_max):
+                    bottom4_xy[:, 1].max() < self.bev_min or bottom4_xy[:, 1].min() > self.bev_max or
+                                                                     bottom_z.min() < self.z_max):
                     continue
 
                 # Convert (x,y) to pixel indices
@@ -341,10 +344,12 @@ class VizData(KittiData):
                 # Extract only the bottom face (4 points)
                 bottom4 = get_bottom_face(vertices_imu)
                 bottom4_xy = bottom4[:, :2]  # (4,2) shape
+                bottom_z   = bottom4[:, 2]
 
                 # Ensure bounding box is within the BEV area
-                if (bottom4_xy[:, 0].max() < self.bev_min or bottom4_xy[:, 0].min() > self.bev_max or
-                        bottom4_xy[:, 1].max() < self.bev_min or bottom4_xy[:, 1].min() > self.bev_max):
+                if (bottom4_xy[:, 0].max() < self.bev_min or bottom4_xy[:, 0].min() > self.bev_max or   #limiting x axes
+                    bottom4_xy[:, 1].max() < self.bev_min or bottom4_xy[:, 1].min() > self.bev_max or   #limiting y axes
+                                                                     bottom_z.min() < self.z_max)    :  #limiting z axes
                     continue
 
                 # Convert (x,y) to pixel indices
@@ -436,8 +441,8 @@ if __name__ == '__main__':
 
     xbound = [-10.0, 10.0, 0.1]
     ybound = [-10.0, 10.0, 0.1]
-    zbound = [-2.0, 5.0, 7.0]
-    dbound = [1.0, 14.0, 0.325]
+    zbound = [  2.0, -2.0, 4.0]
+    dbound = [  1.0, 14.0, 0.325]
 
     dataset = VizData(False,
                         data_aug_conf = {
@@ -472,7 +477,7 @@ if __name__ == '__main__':
 
 
 
-    for i in range(0,len(dataset),4):
+    for i in range(0,len(dataset),1):
         imgs, rots, trans, K, D, xi, binimg, colored_binimg = dataset[i]
 
         print(i)#, imgs.shape, rots.shape, trans.shape, K.shape, D.shape, xi.shape, binimg.shape)
@@ -510,5 +515,5 @@ if __name__ == '__main__':
         # binimg_np = np.clip(binimg_np, 0, 255).astype(np.uint8)
 
         cv2.imshow('bev_map', binimg_np)
-        if cv2.waitKey(250) & 0xFF == ord('q'):
+        if cv2.waitKey(50) & 0xFF == ord('q'):
             break

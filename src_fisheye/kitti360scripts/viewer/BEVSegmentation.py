@@ -111,7 +111,7 @@ def get_bottom_face(vertices_imu):
     sorted_by_z = vertices_imu[vertices_imu[:, 2].argsort()]
 
     # Take the first 4 entries => the ones with the lowest Z.
-    bottom4 = sorted_by_z[:4]
+    bottom4 = sorted_by_z[4:]
 
     # OPTIONAL: Reorder these 4 points in a clockwise or counter-clockwise manner
     # to avoid crossing edges when we fill the polygon.

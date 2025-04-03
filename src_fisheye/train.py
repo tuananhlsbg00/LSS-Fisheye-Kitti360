@@ -31,7 +31,7 @@ def train(nepochs=10,
 
             xbound=[-10.0, 10.0, 0.1],
             ybound=[-10.0, 10.0, 0.1],
-            zbound=[-2.0, 5.0, 7.0],
+            zbound=[  2.0, -2.0, 4.0],
             dbound=[1.0, 14.0, 0.325],
 
             is_aug=False,
