@@ -242,7 +242,7 @@ class CameraFisheye(Camera):
 
         K = np.array([[gamma1, 0, u0],
                       [0, gamma2, v0],
-                      [0, 0, 1]])
+                      [0,      0,  1]])
 
         D = np.array([k1, k2, p1, p2])
 
@@ -250,7 +250,7 @@ class CameraFisheye(Camera):
 
         undistorted_points_norm = cv2.omnidir.undistortPoints(points,K,D,xi,R)
 
-        undistorted_points = undistorted_points_norm * Z.reshape(-1,1,1)
+        undistorted_points = undistorted_points_norm * Z
         return np.concatenate((undistorted_points, Z), axis=2)
     def image2cam(self, u, v, z=50):
         """

@@ -11,7 +11,7 @@ from tqdm import tqdm
 import cv2
 
 
-def get_val_info(model, valloader, loss_fn, device, use_tqdm=False, confidence = 0.5, overlay = 0.5):
+def get_val_info_n_save_fig(model, valloader, loss_fn, device, use_tqdm=False, confidence = 0.5, overlay = 0.5):
     model.eval()
     total_loss = 0.0
     total_intersect = 0.0
@@ -65,13 +65,16 @@ def get_val_info(model, valloader, loss_fn, device, use_tqdm=False, confidence =
             binimg    = cv2.normalize(binimg, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
             binimg    = cv2.cvtColor(binimg.astype(np.uint8), cv2.COLOR_GRAY2BGR)
             overlayed = cv2.addWeighted(pred, overlay, colored_binimgs , 1, 0)
+
+            ver_strip = np.ones((H*3, 3, 3)) * 255 #vertical white strip for better visualization
             
-            imgLR        = np.hstack((imgL, imgR, colored_binimgs)).astype(np.uint8)
-            evalimg      = np.hstack((pred, binimg, overlayed)).astype(np.uint8)
+            imgLR        = np.hstack((imgL,ver_strip, imgR, ver_strip, colored_binimgs)).astype(np.uint8)
+            evalimg      = np.hstack((pred, ver_strip, binimg, ver_strip, overlayed)).astype(np.uint8)
             # eval_colered = np.hstack((colored_binimgs, overlayed)).astype(np.uint8)
 
+            hor_strip = np.ones((3, W*3*3+6, 3)) * 255
 
-            finalimg = np.vstack((imgLR, evalimg)).astype(np.uint8)
+            finalimg = np.vstack((imgLR, hor_strip, evalimg)).astype(np.uint8)
             
             save_path = os.path.join(output_dir, index)
             cv2.imwrite(save_path, finalimg)
@@ -137,7 +140,7 @@ if __name__ == '__main__':
                                             num_workers=nworkers)
     device = torch.device('cpu') if gpuid < 0 else torch.device(f'cuda:{gpuid}')
 
-    modelf = os.path.join(logdir, 'model84500.pt')
+    modelf = os.path.join(logdir, 'model61500.pt')
 
 
     model = compile_model(grid_conf, data_aug_conf, outC=1, is_aug=is_aug)
@@ -151,5 +154,5 @@ if __name__ == '__main__':
 
     loss_fn = SimpleLoss(pos_weight).cuda(gpuid)
 
-    val_info = get_val_info(model, valloader, loss_fn, device, False)
+    val_info = get_val_info_n_save_fig( model, valloader, loss_fn, device, False)
     print('VAL', val_info)

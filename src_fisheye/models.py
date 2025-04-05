@@ -284,7 +284,7 @@ class LiftSplatShoot(nn.Module):
         v0 = v0.unsqueeze(-1).unsqueeze(-1).expand(B, N, H, W)
 
         # 5) For simplicity, radius = min(H,W)//2
-        radius = (min(H, W) - 5 ) // 2
+        radius = (min(H, W) - 1 ) // 2
 
         # 6) Compute squared distance from center
         dist2 = (xx - u0) ** 2 + (yy - v0) ** 2  # shape [B,N,H,W]
@@ -451,7 +451,7 @@ if __name__ == '__main__':
 
     xbound = [-10.0, 10.0, 0.1]
     ybound = [-10.0, 10.0, 0.1]
-    zbound = [-2.0, 5.0, 7.0]
+    zbound = [ 2.0, -2.0, 4.0]
     dbound = [1.0, 14.0, 0.325]
 
     bsz = 4
@@ -511,7 +511,7 @@ if __name__ == '__main__':
     points=[]
 
     for batchi, (imgs, rots, trans, K, D, xi, binimgs) in enumerate(valloader):
-        val_info = get_val_info(Model, valloader, loss_fn, device)
+        # val_info = get_val_info(Model, valloader, loss_fn, device)
 
         B, N, _ = trans.shape
         frustum = Model.frustum.unsqueeze(0).unsqueeze(0)

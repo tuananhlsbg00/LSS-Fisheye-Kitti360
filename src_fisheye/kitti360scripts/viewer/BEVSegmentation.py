@@ -165,11 +165,11 @@ def draw_fisheye_coverage(
 ):
     v0 = camera.fi['projection_parameters']['v0']
     u0 = camera.fi['projection_parameters']['u0']
-    distorted_point = np.array([[[u0 - 700, v0],
-                                 [u0 + 700, v0],
+    distorted_point = np.array([[[u0 - 643, v0],
+                                 [u0 + 643, v0],
                                  [u0, v0]]], dtype=np.float32)
-    Z = np.array([[[50],
-                          [50],
+    Z = np.array([[[500],
+                          [500],
                           [  0]]], dtype=np.float32)
 
     undistorted_point = np.squeeze(camera.image2cam_cv2(distorted_point, Z))

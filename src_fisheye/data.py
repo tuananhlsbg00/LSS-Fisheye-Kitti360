@@ -319,7 +319,6 @@ class VizData(KittiData):
 
         bev_map = np.zeros((self.nx[0], self.nx[1], 3), dtype=np.uint8)
 
-        draw_ego_vehicle(bev_map)
         cam_02 = cams['image_02']
         cam_03 = cams['image_03']
 
@@ -330,6 +329,7 @@ class VizData(KittiData):
         draw_fisheye_coverage(bev_map=bev_map, bev_min=self.bev_min,
                               bev_max=self.bev_max, bev_resolution=self.nx[0],
                               camera=cam_03, color=(162, 181, 224))
+        draw_ego_vehicle(bev_map)
 
         for globalId, bbox_dict in self.bboxes[rec['sequence']].items():
             for obj in bbox_dict.values():

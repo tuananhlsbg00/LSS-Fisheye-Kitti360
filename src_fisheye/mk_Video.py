@@ -3,7 +3,7 @@ import os
 
 # Define the folder containing images
 image_folder = 'visualization'  # Replace with your folder path
-output_video = 'Validation_Visualization_6.mp4'
+output_video = 'Validation_Visualization_Adjusted.mp4'
 frame_rate = 6  # Adjust as needed
 
 # Get the list of image files and sort them
