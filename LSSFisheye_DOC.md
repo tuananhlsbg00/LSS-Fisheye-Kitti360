@@ -673,3 +673,526 @@ Compiles training and validation DataLoaders for the KITTI-360 fisheye data.
   Replace all placeholder URLs (`https://your.repo.url/...`) with the correct links to the corresponding code locations in your repository.
 
 This comprehensive documentation is intended as a handover guide to facilitate the understanding and further development of the modified data loaders for the LSS project.
+
+
+# Lift-Plate-Shoot Model Documentation
+
+This document provides detailed documentation for the model implementations in the Lift-Plate-Shoot (LSS) project. Two modules are described:
+
+- **model.py** – The original model implementation for pinhole cameras.
+- **fisheye_model.py** – The modified model implementation for fisheye cameras with additional methods to handle fisheye distortions.
+
+> **Note:** All GitHub URLs are placeholders. Replace `https://your.repo.url/...` with your actual repository links.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [model.py Module (Pinhole Cameras)](#modelpy-module-pinhole-cameras)
+  - [Up](#up)
+    - [__init__](#up-init)
+    - [forward](#up-forward)
+  - [CamEncode](#camencode)
+    - [__init__](#camencode-init)
+    - [get_depth_dist](#camencode-get_depth_dist)
+    - [get_depth_feat](#camencode-get_depth_feat)
+    - [get_eff_depth](#camencode-get_eff_depth)
+    - [forward](#camencode-forward)
+  - [BevEncode](#bevencode)
+    - [__init__](#bevencode-init)
+    - [forward](#bevencode-forward)
+  - [LiftSplatShoot](#liftsplatshoot)
+    - [__init__](#liftsplatshoot-init)
+    - [create_frustum](#liftsplatshoot-create_frustum)
+    - [get_geometry](#liftsplatshoot-get_geometry)
+    - [get_cam_feats](#liftsplatshoot-get_cam_feats)
+    - [voxel_pooling](#liftsplatshoot-voxel_pooling)
+    - [get_voxels](#liftsplatshoot-get_voxels)
+    - [forward](#liftsplatshoot-forward)
+  - [compile_model](#compile_model)
+- [fisheye_model.py Module (Fisheye Cameras)](#fisheyemodelpy-module-fisheye-cameras)
+  - [Up](#up-fisheye)
+    - [__init__](#up-fisheye-init)
+    - [forward](#up-fisheye-forward)
+  - [CamEncode](#camencode-fisheye)
+    - [__init__](#camencode-fisheye-init)
+    - [get_depth_dist](#camencode-fisheye-get_depth_dist)
+    - [get_depth_feat](#camencode-fisheye-get_depth_feat)
+    - [get_eff_depth](#camencode-fisheye-get_eff_depth)
+    - [forward](#camencode-fisheye-forward)
+  - [BevEncode](#bevencode-fisheye)
+    - [__init__](#bevencode-fisheye-init)
+    - [forward](#bevencode-fisheye-forward)
+  - [LiftSplatShoot](#liftsplatshoot-fisheye)
+    - [__init__](#liftsplatshoot-fisheye-init)
+    - [create_frustum](#liftsplatshoot-fisheye-create_frustum)
+    - [undistort_points_pytorch](#liftsplatshoot-fisheye-undistort_points_pytorch)
+    - [build_fisheye_circle_mask](#liftsplatshoot-fisheye-build_fisheye_circle_mask)
+    - [get_geometry_fisheye](#liftsplatshoot-fisheye-get_geometry_fisheye)
+    - [get_cam_feats](#liftsplatshoot-fisheye-get_cam_feats)
+    - [voxel_pooling](#liftsplatshoot-fisheye-voxel_pooling)
+    - [get_voxels](#liftsplatshoot-fisheye-get_voxels)
+    - [forward](#liftsplatshoot-fisheye-forward)
+  - [compile_model](#compile_model_fisheye)
+
+---
+
+## Overview
+
+The original model (in **model.py**) is built for pinhole cameras and uses standard convolutional backbones (e.g., EfficientNet, ResNet18) to extract image features, project them to a BEV grid, and perform voxel pooling. The modified model in **fisheye_model.py** adapts these methods to handle fisheye distortions with additional functions for unprojection (using a differentiable MEI-model), mask building for fisheye circles, and geometry adjustments specific to fisheye cameras.
+
+---
+
+## model.py Module (Pinhole Cameras)
+
+### Up  
+A module for upsampling and feature fusion.  
+**GitHub:** [Up](https://your.repo.url/Up-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/Up.__init__-placeholder)  
+**Purpose:** Initializes the upsampling module with:
+- A bilinear upsampling layer.
+- Two convolutional blocks with BatchNorm and ReLU for feature refinement after concatenation.
+
+**Parameters:**
+- `in_channels` (*int*): Number of input channels.
+- `out_channels` (*int*): Number of output channels.
+- `scale_factor` (*int*, optional): Upsampling scale factor (default `2`).
+
+**Output:**  
+An instance of the `Up` module.  
+**Data Type:** `nn.Module`
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/Up.forward-placeholder)  
+**Purpose:** Applies upsampling to `x1`, concatenates it with `x2`, and refines the result via convolution.
+
+**Parameters:**
+- `x1` (*torch.Tensor*): Feature map to be upsampled.
+- `x2` (*torch.Tensor*): Feature map to be concatenated with upsampled `x1`.
+
+**Output:**  
+- *Tensor:* Output feature map after upsampling, concatenation, and convolution.  
+**Data Type:** `torch.Tensor`
+
+---
+
+### CamEncode  
+Encodes camera features and predicts depth distribution.  
+**GitHub:** [CamEncode](https://your.repo.url/CamEncode-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/CamEncode.__init__-placeholder)  
+**Purpose:** Initializes the camera encoder using a pretrained EfficientNet as backbone and prepares layers for upsampling and depth prediction.
+
+**Parameters:**
+- `D` (*int*): Depth channel count.
+- `C` (*int*): Feature channel count.
+- `downsample` (*int*): Downsampling factor.
+
+**Output:**  
+An instance of the `CamEncode` module.  
+**Data Type:** `nn.Module`
+
+#### get_depth_dist
+**GitHub:** [get_depth_dist](https://your.repo.url/CamEncode.get_depth_dist-placeholder)  
+**Purpose:** Computes a softmax distribution over depth predictions.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input tensor with raw depth scores.
+- `eps` (*float*, optional): A small epsilon value to ensure numerical stability (default `1e-20`).
+
+**Output:**  
+- *Tensor:* Softmax-normalized depth distribution.  
+**Data Type:** `torch.Tensor`
+
+#### get_depth_feat
+**GitHub:** [get_depth_feat](https://your.repo.url/CamEncode.get_depth_feat-placeholder)  
+**Purpose:** Extracts depth features by obtaining effective depth maps and computing weighted feature maps.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input image tensor.
+
+**Output:**  
+- *Tuple:* `(depth, new_x)` where:
+  - `depth` is the computed depth distribution.
+  - `new_x` is the depth-weighted feature tensor.
+  
+**Data Type:** `Tuple[torch.Tensor, torch.Tensor]`
+
+#### get_eff_depth
+**GitHub:** [get_eff_depth](https://your.repo.url/CamEncode.get_eff_depth-placeholder)  
+**Purpose:** Extracts intermediate features from EfficientNet, collecting endpoints and performing upsampling for depth prediction.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input image tensor.
+
+**Output:**  
+- *Tensor:* Upsampled feature map used for depth estimation.
+  
+**Data Type:** `torch.Tensor`
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/CamEncode.forward-placeholder)  
+**Purpose:** Passes the input through the depth feature pipeline to obtain refined camera features.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input image tensor.
+
+**Output:**  
+- *Tensor:* Camera feature map after depth encoding.
+  
+**Data Type:** `torch.Tensor`
+
+---
+
+### BevEncode  
+Encodes BEV (Bird’s-Eye View) features from voxelized image features.  
+**GitHub:** [BevEncode](https://your.repo.url/BevEncode-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/BevEncode.__init__-placeholder)  
+**Purpose:** Initializes the BEV encoder using a ResNet18-based trunk with additional upsampling layers to produce the final BEV feature map.
+
+**Parameters:**
+- `inC` (*int*): Number of input channels.
+- `outC` (*int*): Number of output channels.
+
+**Output:**  
+An instance of the `BevEncode` module.  
+**Data Type:** `nn.Module`
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/BevEncode.forward-placeholder)  
+**Purpose:** Processes the input feature map through convolutional layers, residual blocks, and upsampling to generate BEV features.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input tensor.
+
+**Output:**  
+- *Tensor:* Final BEV feature map.
+  
+**Data Type:** `torch.Tensor`
+
+---
+
+### LiftSplatShoot  
+The core model that lifts image features into 3D space, splats them onto a BEV grid, and aggregates features.  
+**GitHub:** [LiftSplatShoot](https://your.repo.url/LiftSplatShoot-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/LiftSplatShoot.__init__-placeholder)  
+**Purpose:** Initializes the model by setting grid parameters, preparing frustum generation, and instantiating camera and BEV encoders.
+
+**Parameters:**
+- `grid_conf` (*dict*): Configuration for grid boundaries and resolution.
+- `data_aug_conf` (*dict*): Data augmentation configuration.
+- `outC` (*int*): Number of output channels.
+  
+**Output:**  
+An instance of the `LiftSplatShoot` model.
+  
+**Data Type:** `nn.Module`
+
+#### create_frustum
+**GitHub:** [create_frustum](https://your.repo.url/LiftSplatShoot.create_frustum-placeholder)  
+**Purpose:** Generates a 3D frustum grid from image plane coordinates and depth candidates.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Tensor:* Frustum grid of shape `[D, H, W, 3]` where D, H, W are determined by depth bounds and downsampling.
+  
+**Data Type:** `nn.Parameter`
+
+#### get_geometry
+**GitHub:** [get_geometry](https://your.repo.url/LiftSplatShoot.get_geometry-placeholder)  
+**Purpose:** Computes the 3D geometry (x, y, z locations in the ego frame) for each pixel using camera rotations, translations, and intrinsic parameters.
+
+**Parameters:**
+- `rots` (*torch.Tensor*): Rotation matrices.
+- `trans` (*torch.Tensor*): Translation vectors.
+- `intrins` (*torch.Tensor*): Intrinsic matrices.
+- `post_rots` (*torch.Tensor*): Post-augmentation rotation matrices.
+- `post_trans` (*torch.Tensor*): Post-augmentation translation vectors.
+
+**Output:**  
+- *Tensor:* Geometry tensor of shape `[B, N, D, H/downsample, W/downsample, 3]`.
+  
+**Data Type:** `torch.Tensor`
+
+#### get_cam_feats
+**GitHub:** [get_cam_feats](https://your.repo.url/LiftSplatShoot.get_cam_feats-placeholder)  
+**Purpose:** Extracts camera features using the camera encoder and reshapes them for voxel pooling.
+
+**Parameters:**
+- `x` (*torch.Tensor*): Input image tensor of shape `[B, N, C, imH, imW]`.
+
+**Output:**  
+- *Tensor:* Feature tensor of shape `[B, N, D, H/downsample, W/downsample, C]` (with channels permuted).
+  
+**Data Type:** `torch.Tensor`
+
+#### voxel_pooling
+**GitHub:** [voxel_pooling](https://your.repo.url/LiftSplatShoot.voxel_pooling-placeholder)  
+**Purpose:** Aggregates features into voxels by pooling over 3D space using a “cumsum trick” or a custom autograd function.
+
+**Parameters:**
+- `geom_feats` (*torch.Tensor*): Geometry tensor.
+- `x` (*torch.Tensor*): Camera feature tensor.
+
+**Output:**  
+- *Tensor:* Voxelized feature tensor reshaped to BEV grid.
+  
+**Data Type:** `torch.Tensor`
+
+#### get_voxels
+**GitHub:** [get_voxels](https://your.repo.url/LiftSplatShoot.get_voxels-placeholder)  
+**Purpose:** Computes geometry from camera parameters, extracts camera features, and performs voxel pooling to produce a BEV representation.
+
+**Parameters:**
+- `x`, `rots`, `trans`, `intrins`, `post_rots`, `post_trans`: Corresponding camera parameters and image tensor.
+
+**Output:**  
+- *Tensor:* Voxelized feature map ready for BEV encoding.
+  
+**Data Type:** `torch.Tensor`
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/LiftSplatShoot.forward-placeholder)  
+**Purpose:** Runs the full pipeline:
+1. Generates voxels from image features.
+2. Encodes BEV features via the BEV encoder.
+
+**Parameters:**
+- `x`, `rots`, `trans`, `intrins`, `post_rots`, `post_trans`: Inputs as described above.
+
+**Output:**  
+- *Tensor:* Final output of the model (BEV feature map).
+  
+**Data Type:** `torch.Tensor`
+
+---
+
+### compile_model
+**GitHub:** [compile_model](https://your.repo.url/compile_model-placeholder)  
+**Purpose:**  
+Helper function that instantiates and returns a `LiftSplatShoot` model.
+
+**Parameters:**
+- `grid_conf` (*dict*): Grid configuration.
+- `data_aug_conf` (*dict*): Data augmentation configuration.
+- `outC` (*int*): Number of output channels.
+
+**Output:**  
+- *Instance:* `LiftSplatShoot` model.
+  
+**Data Type:** `nn.Module`
+
+---
+
+## fisheye_model.py Module (Fisheye Cameras)
+
+### Up  
+Identical in structure to the pinhole version, used for upsampling in the fisheye model.  
+**GitHub:** [Up](https://your.repo.url/Up-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/Up.__init__-placeholder)  
+**Purpose:** Initializes upsampling and convolution modules.
+
+**Parameters:**  
+Same as in the pinhole model.
+
+**Output:**  
+Instance of `Up`.
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/Up.forward-placeholder)  
+**Purpose:** Upsamples, concatenates, and processes feature maps.
+
+**Parameters:**  
+- `x1`, `x2`: Input tensors.
+
+**Output:**  
+Upsampled and refined tensor.
+
+---
+
+### CamEncode  
+Encodes camera features for fisheye images.  
+**GitHub:** [CamEncode](https://your.repo.url/CamEncode-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/CamEncode.__init__-placeholder)  
+**Purpose:** Initializes the fisheye camera encoder with a pretrained EfficientNet backbone and additional layers.
+
+**Parameters:**  
+Same as in the pinhole model.
+
+**Output:**  
+Instance of `CamEncode`.
+
+#### get_depth_dist, get_depth_feat, get_eff_depth, forward
+**GitHub:**  
+- [get_depth_dist](https://your.repo.url/CamEncode.get_depth_dist-placeholder)  
+- [get_depth_feat](https://your.repo.url/CamEncode.get_depth_feat-placeholder)  
+- [get_eff_depth](https://your.repo.url/CamEncode.get_eff_depth-placeholder)  
+- [forward](https://your.repo.url/CamEncode.forward-placeholder)  
+
+**Purpose:**  
+These methods function similarly to the pinhole version, computing depth distributions and encoding features adapted for fisheye imagery.
+
+**Parameters & Outputs:**  
+Same as described in the pinhole model, with any fisheye-specific adjustments noted in props.
+
+---
+
+### BevEncode  
+Encodes BEV features from fisheye-processed voxels.  
+**GitHub:** [BevEncode](https://your.repo.url/BevEncode-placeholder)
+
+#### __init__ and forward
+**GitHub:**  
+- [__init__](https://your.repo.url/BevEncode.__init__-placeholder)  
+- [forward](https://your.repo.url/BevEncode.forward-placeholder)  
+
+**Purpose:**  
+Same as the pinhole version.
+
+**Parameters & Outputs:**  
+As described in the pinhole model.
+
+---
+
+### LiftSplatShoot (Fisheye)  
+A specialized model to handle fisheye camera distortions with additional methods.  
+**GitHub:** [LiftSplatShoot (Fisheye)](https://your.repo.url/LiftSplatShoot-fisheye-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/LiftSplatShoot.__init__-placeholder)  
+**Purpose:**  
+Initializes the fisheye model with grid parameters, creates the frustum, and instantiates camera and BEV encoders. Also sets an optional augmentation flag and initializes a mask variable.
+
+**Parameters:**
+- `grid_conf`, `data_aug_conf`, `outC`: Same as before.
+- `is_aug` (*bool*, optional): Flag for additional augmentation (default `False`).
+
+**Output:**  
+Instance of `LiftSplatShoot` (Fisheye version).
+
+#### create_frustum
+**GitHub:** [create_frustum](https://your.repo.url/LiftSplatShoot.create_frustum-placeholder)  
+**Purpose:**  
+Creates a frustum grid from image coordinates and depth candidates.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Tensor:* Frustum grid of shape `[D, H, W, 3]`.
+
+#### undistort_points_pytorch
+**GitHub:** [undistort_points_pytorch](https://your.repo.url/LiftSplatShoot.undistort_points_pytorch-placeholder)  
+**Purpose:**  
+Implements a differentiable MEI-model unprojection to undistort pixel coordinates.
+
+**Parameters:**
+- `points` (*torch.Tensor*): Distorted pixel coordinates of shape `(N, 2)`.
+- `K` (*torch.Tensor*): Intrinsic parameters (shape `[3, 3]` or batched).
+- `D` (*torch.Tensor*): Distortion coefficients (shape `[4,]`).
+- `xi` (*torch.Tensor*): Mirror parameter.
+- `iterations` (*int*, optional): Number of iterations (default `20`).
+
+**Output:**  
+- *Tensor:* Unit ray directions of shape `(N, 3)`.
+  
+**Data Type:** `torch.Tensor`
+
+#### build_fisheye_circle_mask
+**GitHub:** [build_fisheye_circle_mask](https://your.repo.url/LiftSplatShoot.build_fisheye_circle_mask-placeholder)  
+**Purpose:**  
+Generates a mask to exclude pixels outside the effective fisheye circle.
+
+**Parameters:**
+- `B` (*int*): Batch size.
+- `N` (*int*): Number of cameras.
+- `H`, `W` (*int*): Height and width of the feature map.
+- `K` (*torch.Tensor*): Intrinsic parameters.
+
+**Output:**  
+- *Tensor:* Boolean mask of shape `[B, N, H, W]` (expanded appropriately).
+
+**Data Type:** `torch.Tensor`
+
+#### get_geometry_fisheye
+**GitHub:** [get_geometry_fisheye](https://your.repo.url/LiftSplatShoot.get_geometry_fisheye-placeholder)  
+**Purpose:**  
+Computes the 3D geometry for fisheye images using the undistortion method and transforms points from camera to ego coordinates.
+
+**Parameters:**
+- `rots`, `trans` (*torch.Tensor*): Rotation and translation.
+- `K`, `D`, `xi`: Fisheye-specific intrinsic, distortion, and mirror parameters.
+
+**Output:**  
+- *Tensor:* Geometry tensor of shape `[B, N, D, H_down, W_down, 3]` with points outside the effective circle masked.
+
+**Data Type:** `torch.Tensor`
+
+#### get_cam_feats, voxel_pooling, get_voxels
+**GitHub:**  
+- [get_cam_feats](https://your.repo.url/LiftSplatShoot.get_cam_feats-placeholder)  
+- [voxel_pooling](https://your.repo.url/LiftSplatShoot.voxel_pooling-placeholder)  
+- [get_voxels](https://your.repo.url/LiftSplatShoot.get_voxels-placeholder)  
+
+**Purpose:**  
+These methods function similarly to their pinhole counterparts but use the geometry from `get_geometry_fisheye` and apply the fisheye mask.
+
+**Parameters & Outputs:**  
+Same structure as described in the pinhole model.
+
+#### forward
+**GitHub:** [forward](https://your.repo.url/LiftSplatShoot.forward-placeholder)  
+**Purpose:**  
+Runs the full fisheye pipeline: obtains voxels using fisheye-specific geometry and encodes them into a BEV feature map.
+
+**Parameters:**
+- `x`, `rots`, `trans`, `intrins`, `post_rots`, `post_trans`: Input tensors and camera parameters.
+
+**Output:**  
+- *Tensor:* Final BEV feature map.
+  
+**Data Type:** `torch.Tensor`
+
+---
+
+### compile_model (Fisheye)
+**GitHub:** [compile_model](https://your.repo.url/compile_model-fisheye-placeholder)  
+**Purpose:**  
+Helper function to instantiate and return a `LiftSplatShoot` model configured for fisheye cameras.
+
+**Parameters:**
+- `grid_conf` (*dict*): Grid configuration.
+- `data_aug_conf` (*dict*): Data augmentation configuration.
+- `outC` (*int*, optional): Number of output channels (default `1`).
+- `is_aug` (*bool*, optional): Augmentation flag (default `False`).
+
+**Output:**  
+- *Instance:* `LiftSplatShoot` (Fisheye version).
+
+**Data Type:** `nn.Module`
+
+---
+
+## Final Notes
+
+- **Placeholder Text:**  
+  Some descriptions use "props" where exact details may need updating. Please refine these sections based on your project specifications.
+
+- **GitHub URLs:**  
+  Replace all placeholder URLs (`https://your.repo.url/...`) with the actual links to the corresponding sections in your repository.
+
+This documentation serves as a comprehensive guide for both the original and fisheye-adapted model implementations in the Lift-Plate-Shoot project.
