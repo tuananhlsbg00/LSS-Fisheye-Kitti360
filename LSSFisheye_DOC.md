@@ -1196,3 +1196,209 @@ Helper function to instantiate and return a `LiftSplatShoot` model configured fo
   Replace all placeholder URLs (`https://your.repo.url/...`) with the actual links to the corresponding sections in your repository.
 
 This documentation serves as a comprehensive guide for both the original and fisheye-adapted model implementations in the Lift-Plate-Shoot project.
+
+# BEVSegmentation Module Documentation
+
+This document provides detailed documentation for the **BEVSegmentation** module. This module contains configuration parameters and a collection of helper functions used to generate Bird’s-Eye View (BEV) segmentation maps from KITTI-360 data. These functions support tasks such as loading poses, color assignment, geometric transformations, and drawing on BEV maps.
+
+> **Note:** All GitHub URLs are placeholders. Replace `https://your.repo.url/...` with your actual repository links.
+
+---
+
+## Table of Contents
+
+- [Configuration](#configuration)
+- [Helper Functions](#helper-functions)
+  - [load_poses](#load_poses)
+  - [assign_color](#assign_color)
+  - [transform_points](#transform_points)
+  - [world_to_bev_indices](#world_to_bev_indices)
+  - [fill_polygon](#fill_polygon)
+  - [get_bottom_face](#get_bottom_face)
+  - [draw_ego_vehicle](#draw_ego_vehicle)
+  - [draw_fisheye_coverage](#draw_fisheye_coverage)
+- [Main Script (Optional)](#main-script-optional)
+
+---
+
+## Configuration
+
+This section describes the global configuration parameters used for BEV segmentation.
+
+- **bev_size**:  
+  *Type:* `float`  
+  *Description:* Size of the BEV area in meters (e.g., `20.0` for a 20m x 20m area).
+
+- **bev_resolution**:  
+  *Type:* `int`  
+  *Description:* Resolution of the BEV grid (e.g., `200` for 200×200 pixels; 0.1 m per pixel).
+
+- **bev_min** and **bev_max**:  
+  *Type:* `float`  
+  *Description:* The minimum and maximum coordinates in meters for the BEV grid. Computed as `-bev_size/2.0` and `bev_size/2.0`, respectively.
+
+- **T_additional**:  
+  *Type:* `np.ndarray` (4×4)  
+  *Description:* A fixed transformation matrix that shifts the BEV plane relative to the IMU origin.  
+  *Default Values:*  
+  - X shift: `-0.81`  
+  - Y shift: `-0.32`  
+  - Z shift: `-0.9`
+
+---
+
+## Helper Functions
+
+This module includes several helper functions for processing KITTI-360 data and generating BEV maps.
+
+### load_poses
+**GitHub:** [load_poses](https://your.repo.url/BEVSegmentation.load_poses-placeholder)
+
+**Purpose:**  
+Loads pose information from a file. Each line in the file is expected to contain 13 numbers: a frame index followed by 12 numbers representing a 3×4 IMU-to-world matrix.
+
+**Parameters:**
+- `filename` (*str*): Path to the pose file.
+- `start` (*int*, optional): Number of lines to skip at the beginning (default `0`).
+- `max_poses` (*int*, optional): Maximum number of poses to load (default `300`).
+
+**Output:**  
+- *NumPy array:* Loaded poses with data type `np.float32`.
+
+---
+
+### assign_color
+**GitHub:** [assign_color](https://your.repo.url/BEVSegmentation.assign_color-placeholder)
+
+**Purpose:**  
+Assigns an RGB color based on a given global identifier, using the KITTI-360 label mappings.
+
+**Parameters:**
+- `globalId` (*int*): A unique global identifier for an object.
+
+**Output:**  
+- *Tuple:* `(R, G, B)` where each component is an integer (0–255).
+
+---
+
+### transform_points
+**GitHub:** [transform_points](https://your.repo.url/BEVSegmentation.transform_points-placeholder)
+
+**Purpose:**  
+Transforms an array of 3D points using a given 4×4 transformation matrix.
+
+**Parameters:**
+- `points` (*np.ndarray*): Array of shape `(N, 3)` representing N 3D points.
+- `T` (*np.ndarray*): A 4×4 transformation matrix.
+
+**Output:**  
+- *NumPy array:* Transformed points of shape `(N, 3)`.
+
+---
+
+### world_to_bev_indices
+**GitHub:** [world_to_bev_indices](https://your.repo.url/BEVSegmentation.world_to_bev_indices-placeholder)
+
+**Purpose:**  
+Converts 2D world coordinates (in meters) into pixel indices on the BEV grid.
+
+**Parameters:**
+- `points_xy` (*np.ndarray*): 2D coordinates (in meters) with shape `(N, 2)`.
+- `bev_min` (*float*): Minimum coordinate of the BEV grid.
+- `bev_max` (*float*): Maximum coordinate of the BEV grid.
+- `resolution` (*int*): Resolution of the BEV grid (number of pixels).
+
+**Output:**  
+- *NumPy array:* Pixel indices as an integer array of shape `(N, 2)`.
+
+---
+
+### fill_polygon
+**GitHub:** [fill_polygon](https://your.repo.url/BEVSegmentation.fill_polygon-placeholder)
+
+**Purpose:**  
+Fills a polygon on a segmentation map with a specified RGB color.
+
+**Parameters:**
+- `seg_map` (*np.ndarray*): A segmentation map (RGB image) with shape `(H, W, 3)`.
+- `polygon` (*list*): A list of (x, y) tuples representing polygon vertices.
+- `color` (*tuple*, optional): An (R, G, B) tuple. If not provided, a default fill value of `1.0` is used.
+
+**Output:**  
+- *Side-effect:* The `seg_map` is modified in-place with the filled polygon.
+
+---
+
+### get_bottom_face
+**GitHub:** [get_bottom_face](https://your.repo.url/BEVSegmentation.get_bottom_face-placeholder)
+
+**Purpose:**  
+Extracts the bottom face of a 3D bounding box by selecting the 4 vertices with the lowest Z-values in the IMU coordinate frame.
+
+**Parameters:**
+- `vertices_imu` (*np.ndarray*): Array of 3D vertices with shape `(N, 3)`.
+
+**Output:**  
+- *NumPy array:* An array of shape `(4, 3)` representing the 4 corners of the bottom face.  
+- *Notes:* The function sorts vertices by their Z-coordinate and reorders them in a clockwise or counter-clockwise order based on the centroid.
+
+---
+
+### draw_ego_vehicle
+**GitHub:** [draw_ego_vehicle](https://your.repo.url/BEVSegmentation.draw_ego_vehicle-placeholder)
+
+**Purpose:**  
+Draws a representation of the ego vehicle on the BEV map, including a green rectangle and an arrow.
+
+**Parameters:**
+- `bev_map` (*np.ndarray*): The BEV map image (RGB) with shape `(H, W, 3)`.
+
+**Output:**  
+- *Side-effect:* The BEV map is modified in-place with the ego vehicle drawn at the center.
+
+---
+
+### draw_fisheye_coverage
+**GitHub:** [draw_fisheye_coverage](https://your.repo.url/BEVSegmentation.draw_fisheye_coverage-placeholder)
+
+**Purpose:**  
+Draws the coverage area of a fisheye camera on the BEV map. This involves:
+1. Undistorting a set of predefined pixel coordinates.
+2. Transforming these coordinates from the camera frame to the IMU frame.
+3. Converting the transformed points into BEV pixel indices.
+4. Filling the corresponding area on the BEV map with a specified color.
+
+**Parameters:**
+- `bev_map` (*np.ndarray*): The BEV map image (RGB) with shape `(H, W, 3)`.
+- `bev_min` (*float*): Minimum BEV coordinate (in meters).
+- `bev_max` (*float*): Maximum BEV coordinate (in meters).
+- `bev_resolution` (*int*): Resolution of the BEV grid.
+- `camera`: A `CameraFisheye` object containing camera parameters and projection methods.
+- `color` (*tuple*, optional): An (R, G, B) tuple to fill the coverage area (default `(25, 25, 50)`).
+
+**Output:**  
+- *Side-effect:* The BEV map is modified in-place with the fisheye coverage area drawn.
+
+---
+
+## Main Script (Optional)
+
+The module also contains a main script that demonstrates how to use the helper functions to:
+- Load 3D bounding box annotations and poses.
+- Create BEV maps.
+- Draw ego vehicle and fisheye camera coverage.
+- Process bounding boxes and generate segmentation maps.
+
+This script is intended for testing and visualization purposes.
+
+---
+
+## Final Notes
+
+- **Placeholder Text:**  
+  Update any sections marked with "props" or where additional details are needed based on your project specifications.
+
+- **GitHub URLs:**  
+  Replace all placeholder URLs (`https://your.repo.url/...`) with the correct links to the corresponding functions in your repository.
+
+This documentation serves as a comprehensive reference for the **BEVSegmentation** module, enabling developers to understand and extend its functionality.
