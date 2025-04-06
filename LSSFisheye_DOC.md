@@ -14,51 +14,51 @@ The documentation covers two main modules:
 ## Table of Contents
 
 - [Overview](#overview)
-- [data.py Module (NuScenes Data Loader)](#datapy-module)
-  - [Class [NuscData](https://your.repo.url/NuscData-placeholder)](#class-nuscdata)
-    - [Method [__init__](https://your.repo.url/NuscData.__init__-placeholder)](#method-init)
-    - [Method [fix_nuscenes_formatting](https://your.repo.url/NuscData.fix_nuscenes_formatting-placeholder)](#method-fix_nuscenes_formatting)
-    - [Method [get_scenes](https://your.repo.url/NuscData.get_scenes-placeholder)](#method-get_scenes)
-    - [Method [prepro](https://your.repo.url/NuscData.prepro-placeholder)](#method-prepro)
-    - [Method [sample_augmentation](https://your.repo.url/NuscData.sample_augmentation-placeholder)](#method-sample_augmentation)
-    - [Method [get_image_data](https://your.repo.url/NuscData.get_image_data-placeholder)](#method-get_image_data)
-    - [Method [get_lidar_data](https://your.repo.url/NuscData.get_lidar_data-placeholder)](#method-get_lidar_data)
-    - [Method [get_binimg](https://your.repo.url/NuscData.get_binimg-placeholder)](#method-get_binimg)
-    - [Method [choose_cams](https://your.repo.url/NuscData.choose_cams-placeholder)](#method-choose_cams)
-    - [Method [__str__](https://your.repo.url/NuscData.__str__-placeholder)](#method-str)
-    - [Method [__len__](https://your.repo.url/NuscData.__len__-placeholder)](#method-len)
-  - [Class [VizData](https://your.repo.url/VizData-placeholder)](#class-vizdata)
-    - [Method [__init__](https://your.repo.url/VizData.__init__-placeholder)](#method-vizdata_init)
-    - [Method [__getitem__](https://your.repo.url/VizData.__getitem__-placeholder)](#method-vizdata_getitem)
-  - [Class [SegmentationData](https://your.repo.url/SegmentationData-placeholder)](#class-segmentationdata)
-    - [Method [__init__](https://your.repo.url/SegmentationData.__init__-placeholder)](#method-seg_init)
-    - [Method [__getitem__](https://your.repo.url/SegmentationData.__getitem__-placeholder)](#method-seg_getitem)
-  - [Function [worker_rnd_init](https://your.repo.url/worker_rnd_init-placeholder)](#function-worker_rnd_init)
-  - [Function [compile_data](https://your.repo.url/compile_data-placeholder)](#function-compile_data)
-- [fisheye_data.py Module (KITTI-360 Fisheye Data Loader)](#fisheye_datapy-module)
-  - [Class [KittiData](https://your.repo.url/KittiData-placeholder)](#class-kittidata)
-    - [Method [__init__](https://your.repo.url/KittiData.__init__-placeholder)](#method-kitti_init)
-    - [Method [shift_origin](https://your.repo.url/KittiData.shift_origin-placeholder)](#method-shift_origin)
-    - [Method [get_sequences](https://your.repo.url/KittiData.get_sequences-placeholder)](#method-get_sequences)
-    - [Method [prepro](https://your.repo.url/KittiData.prepro-placeholder)](#method-kitti_prepro)
-    - [Method [get_bboxes](https://your.repo.url/KittiData.get_bboxes-placeholder)](#method-get_bboxes)
-    - [Method [sample_augmentation](https://your.repo.url/KittiData.sample_augmentation-placeholder)](#method-kitti_sample_augmentation)
-    - [Method [get_aug_image_data](https://your.repo.url/KittiData.get_aug_image_data-placeholder)](#method-get_aug_image_data)
-    - [Method [get_image_data](https://your.repo.url/KittiData.get_image_data-placeholder)](#method-get_image_data_kitti)
-    - [Method [get_lidar_data](https://your.repo.url/KittiData.get_lidar_data-placeholder)](#method-get_lidar_data_kitti)
-    - [Method [get_binimg](https://your.repo.url/KittiData.get_binimg-placeholder)](#method-get_binimg_kitti)
-    - [Method [get_cams](https://your.repo.url/KittiData.get_cams-placeholder)](#method-get_cams)
-    - [Method [__str__](https://your.repo.url/KittiData.__str__-placeholder)](#method-kitti_str)
-    - [Method [__len__](https://your.repo.url/KittiData.__len__-placeholder)](#method-kitti_len)
-  - [Class [VizData](https://your.repo.url/VizDataKitti-placeholder)](#class-vizdata-kitti)
-    - [Method [__init__](https://your.repo.url/VizDataKitti.__init__-placeholder)](#method-viz_kitti_init)
-    - [Method [get_colored_binimg](https://your.repo.url/VizDataKitti.get_colored_binimg-placeholder)](#method-get_colored_binimg)
-    - [Method [__getitem__](https://your.repo.url/VizDataKitti.__getitem__-placeholder)](#method-viz_kitti_getitem)
-  - [Class [SegmentationData](https://your.repo.url/SegmentationDataKitti-placeholder)](#class-segmentationdata-kitti)
-    - [Method [__init__](https://your.repo.url/SegmentationDataKitti.__init__-placeholder)](#method-seg_kitti_init)
-    - [Method [__getitem__](https://your.repo.url/SegmentationDataKitti.__getitem__-placeholder)](#method-seg_kitti_getitem)
-  - [Function [worker_rnd_init](https://your.repo.url/worker_rnd_initKitti-placeholder)](#function-worker_rnd_init_kitti)
-  - [Function [compile_data](https://your.repo.url/compile_dataKitti-placeholder)](#function-compile_data_kitti)
+- [data.py Module (NuScenes Data Loader)](#datapy-module-nuscenes-data-loader)
+  - [NuscData](#nuscdata)
+    - [__init__](#nuscdata-init)
+    - [fix_nuscenes_formatting](#nuscdata-fix_nuscenes_formatting)
+    - [get_scenes](#nuscdata-get_scenes)
+    - [prepro](#nuscdata-prepro)
+    - [sample_augmentation](#nuscdata-sample_augmentation)
+    - [get_image_data](#nuscdata-get_image_data)
+    - [get_lidar_data](#nuscdata-get_lidar_data)
+    - [get_binimg](#nuscdata-get_binimg)
+    - [choose_cams](#nuscdata-choose_cams)
+    - [__str__](#nuscdata-str)
+    - [__len__](#nuscdata-len)
+  - [VizData](#vizdata)
+    - [__init__](#vizdata-init)
+    - [__getitem__](#vizdata-getitem)
+  - [SegmentationData](#segmentationdata)
+    - [__init__](#segmentationdata-init)
+    - [__getitem__](#segmentationdata-getitem)
+  - [worker_rnd_init](#worker_rnd_init)
+  - [compile_data](#compile_data)
+- [fisheye_data.py Module (KITTI-360 Fisheye Data Loader)](#fisheye_datapy-module-kitti-360-fisheye-data-loader)
+  - [KittiData](#kittidata)
+    - [__init__](#kittidata-init)
+    - [shift_origin](#kittidata-shift_origin)
+    - [get_sequences](#kittidata-get_sequences)
+    - [prepro](#kittidata-prepro)
+    - [get_bboxes](#kittidata-get_bboxes)
+    - [sample_augmentation](#kittidata-sample_augmentation)
+    - [get_aug_image_data](#kittidata-get_aug_image_data)
+    - [get_image_data](#kittidata-get_image_data)
+    - [get_lidar_data](#kittidata-get_lidar_data)
+    - [get_binimg](#kittidata-get_binimg)
+    - [get_cams](#kittidata-get_cams)
+    - [__str__](#kittidata-str)
+    - [__len__](#kittidata-len)
+  - [VizData (KITTI-360)](#vizdata-kitti-360)
+    - [__init__](#vizdata-kitti-360-init)
+    - [get_colored_binimg](#vizdata-kitti-360-get_colored_binimg)
+    - [__getitem__](#vizdata-kitti-360-getitem)
+  - [SegmentationData (KITTI-360)](#segmentationdata-kitti-360)
+    - [__init__](#segmentationdata-kitti-360-init)
+    - [__getitem__](#segmentationdata-kitti-360-getitem)
+  - [worker_rnd_init (KITTI-360)](#worker_rnd_init-kitti-360)
+  - [compile_data (KITTI-360)](#compile_data-kitti-360)
 
 ---
 
@@ -81,389 +81,586 @@ The modifications include:
 
 ## data.py Module (NuScenes Data Loader)
 
-### Class [NuscData](https://your.repo.url/NuscData-placeholder)
-A PyTorch dataset class that loads and preprocesses data from the NuScenes dataset.
+### NuscData
+A PyTorch dataset class that loads and preprocesses data from the NuScenes dataset.  
+**GitHub:** [NuscData](https://your.repo.url/NuscData-placeholder)
 
-#### Method [__init__](https://your.repo.url/NuscData.__init__-placeholder)
-- **Purpose:** Initializes the dataset by:
-  - Storing configuration parameters.
-  - Loading scenes and samples.
-  - Preprocessing samples.
-  - Generating the BEV grid using `gen_dx_bx`.
-  - Adjusting file paths if necessary.
-- **Parameters:**
-  - `nusc` (*NuScenes instance*): NuScenes dataset object.
-  - `is_train` (*bool*): Indicates training or validation mode.
-  - `data_aug_conf` (*dict*): Data augmentation configuration parameters.
-  - `grid_conf` (*dict*): Configuration for grid boundaries and resolution.
-- **Returns:** An initialized instance of `NuscData`.
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/NuscData.__init__-placeholder)  
+**Purpose:**  
+Initializes the dataset by:
+- Storing configuration parameters.
+- Loading scenes and samples.
+- Preprocessing samples.
+- Generating the BEV grid using `gen_dx_bx`.
+- Adjusting file paths if necessary.
 
-#### Method [fix_nuscenes_formatting](https://your.repo.url/NuscData.fix_nuscenes_formatting-placeholder)
-- **Purpose:** Ensures that file paths within the NuScenes object match the actual file locations.
-- **Parameters:** None.
-- **Output:**  
-  - *Side-effect:* Updates internal sample records with corrected file paths.
-- **Data Type:** None (returns `None`).
+**Parameters:**
+- `nusc` (*NuScenes instance*): NuScenes dataset object.
+- `is_train` (*bool*): Indicates training or validation mode.
+- `data_aug_conf` (*dict*): Data augmentation configuration parameters.
+- `grid_conf` (*dict*): Configuration for grid boundaries and resolution.
 
-#### Method [get_scenes](https://your.repo.url/NuscData.get_scenes-placeholder)
-- **Purpose:** Filters and retrieves scene names based on the training or validation split.
-- **Parameters:** None.
-- **Output:**  
-  - *List of strings:* Scene names.
-- **Data Type:** `List[str]`
+**Returns:**  
+An initialized instance of `NuscData`.
 
-#### Method [prepro](https://your.repo.url/NuscData.prepro-placeholder)
-- **Purpose:** Preprocesses the dataset by filtering samples belonging to the chosen scenes and sorting them.
-- **Parameters:** None.
-- **Output:**  
-  - *List:* Processed sample records.
-- **Data Type:** `List[dict]`
+#### fix_nuscenes_formatting
+**GitHub:** [fix_nuscenes_formatting](https://your.repo.url/NuscData.fix_nuscenes_formatting-placeholder)  
+**Purpose:**  
+Ensures that file paths within the NuScenes object match the actual file locations.
 
-#### Method [sample_augmentation](https://your.repo.url/NuscData.sample_augmentation-placeholder)
-- **Purpose:** Computes augmentation parameters including resize factor, dimensions, crop coordinates, flip flag, and rotation angle.
-- **Parameters:** None.
-- **Output:**  
-  - *Tuple:* `(resize, resize_dims, crop, flip, rotate)`
-    - `resize` (*float*)
-    - `resize_dims` (*tuple of ints*): New dimensions after resizing.
-    - `crop` (*tuple of ints*): Crop coordinates.
-    - `flip` (*bool*): Indicates if horizontal flip is applied.
-    - `rotate` (*float*): Rotation angle.
-- **Data Type:** `Tuple`
+**Parameters:**  
+None.
 
-#### Method [get_image_data](https://your.repo.url/NuscData.get_image_data-placeholder)
-- **Purpose:** Loads images from specified cameras, applies augmentation, and returns image tensors along with camera calibration data.
-- **Parameters:**
-  - `rec` (*dict*): A sample record from NuScenes.
-  - `cams` (*List[str]*): List of camera identifiers.
-- **Output:**  
-  - *Tuple:* Contains:
-    - Images tensor (normalized)
-    - Rotation matrices tensor
-    - Translation vectors tensor
-    - Camera intrinsic matrices tensor
-    - Post-augmentation rotation matrices tensor
-    - Post-augmentation translation vectors tensor
-- **Data Type:** `Tuple[torch.Tensor, ...]`
+**Output:**  
+- *Side-effect:* Updates internal sample records with corrected file paths.  
+- *Returns:* `None`
 
-#### Method [get_lidar_data](https://your.repo.url/NuscData.get_lidar_data-placeholder)
-- **Purpose:** Retrieves LiDAR point cloud data for the sample.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-  - `nsweeps` (*int*): Number of LiDAR sweeps to aggregate.
-- **Output:**  
-  - *Tensor:* LiDAR points (first 3 dimensions: x, y, z).
-- **Data Type:** `torch.Tensor`
+#### get_scenes
+**GitHub:** [get_scenes](https://your.repo.url/NuscData.get_scenes-placeholder)  
+**Purpose:**  
+Filters and retrieves scene names based on the training or validation split.
 
-#### Method [get_binimg](https://your.repo.url/NuscData.get_binimg-placeholder)
-- **Purpose:** Generates a binary BEV image by projecting object annotations onto the BEV grid.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-- **Output:**  
-  - *Tensor:* Binary BEV image with a shape compatible with the grid dimensions.
-- **Data Type:** `torch.Tensor`
+**Parameters:**  
+None.
 
-#### Method [choose_cams](https://your.repo.url/NuscData.choose_cams-placeholder)
-- **Purpose:** Randomly selects a subset of camera identifiers during training.
-- **Parameters:** None.
-- **Output:**  
-  - *List[str]:* Selected camera identifiers.
-- **Data Type:** `List[str]`
+**Output:**  
+- *List of strings:* Scene names.  
+- *Data Type:* `List[str]`
 
-#### Method [__str__](https://your.repo.url/NuscData.__str__-placeholder)
-- **Purpose:** Returns a string representation summarizing the dataset.
-- **Parameters:** None.
-- **Output:**  
-  - *String:* Summary including the number of samples, split type, and augmentation configuration.
-- **Data Type:** `str`
+#### prepro
+**GitHub:** [prepro](https://your.repo.url/NuscData.prepro-placeholder)  
+**Purpose:**  
+Preprocesses the dataset by filtering samples belonging to the chosen scenes and sorting them.
 
-#### Method [__len__](https://your.repo.url/NuscData.__len__-placeholder)
-- **Purpose:** Returns the number of samples in the dataset.
-- **Parameters:** None.
-- **Output:**  
-  - *Integer:* Total number of samples.
-- **Data Type:** `int`
+**Parameters:**  
+None.
+
+**Output:**  
+- *List:* Processed sample records.  
+- *Data Type:* `List[dict]`
+
+#### sample_augmentation
+**GitHub:** [sample_augmentation](https://your.repo.url/NuscData.sample_augmentation-placeholder)  
+**Purpose:**  
+Computes augmentation parameters including resize factor, dimensions, crop coordinates, flip flag, and rotation angle.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Tuple:* `(resize, resize_dims, crop, flip, rotate)` where:
+  - `resize` (*float*)
+  - `resize_dims` (*tuple of ints*): New dimensions after resizing.
+  - `crop` (*tuple of ints*): Crop coordinates.
+  - `flip` (*bool*): Indicates if horizontal flip is applied.
+  - `rotate` (*float*): Rotation angle.
+
+**Data Type:** `Tuple`
+
+#### get_image_data
+**GitHub:** [get_image_data](https://your.repo.url/NuscData.get_image_data-placeholder)  
+**Purpose:**  
+Loads images from specified cameras, applies augmentation, and returns image tensors along with camera calibration data.
+
+**Parameters:**
+- `rec` (*dict*): A sample record from NuScenes.
+- `cams` (*List[str]*): List of camera identifiers.
+
+**Output:**  
+- *Tuple:* Contains:
+  - `imgs` (*torch.Tensor*): Normalized image tensors.
+  - `rots` (*torch.Tensor*): Rotation matrices.
+  - `trans` (*torch.Tensor*): Translation vectors.
+  - `intrins` (*torch.Tensor*): Camera intrinsic matrices.
+  - `post_rots` (*torch.Tensor*): Post-augmentation rotation matrices.
+  - `post_trans` (*torch.Tensor*): Post-augmentation translation vectors.
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
+
+#### get_lidar_data
+**GitHub:** [get_lidar_data](https://your.repo.url/NuscData.get_lidar_data-placeholder)  
+**Purpose:**  
+Retrieves LiDAR point cloud data for the sample.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+- `nsweeps` (*int*): Number of LiDAR sweeps to aggregate.
+
+**Output:**  
+- *Tensor:* LiDAR points (first 3 dimensions: x, y, z).
+
+**Data Type:** `torch.Tensor`
+
+#### get_binimg
+**GitHub:** [get_binimg](https://your.repo.url/NuscData.get_binimg-placeholder)  
+**Purpose:**  
+Generates a binary BEV image by projecting object annotations onto the BEV grid.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+
+**Output:**  
+- *Tensor:* Binary BEV image with a shape compatible with the grid dimensions.
+
+**Data Type:** `torch.Tensor`
+
+#### choose_cams
+**GitHub:** [choose_cams](https://your.repo.url/NuscData.choose_cams-placeholder)  
+**Purpose:**  
+Randomly selects a subset of camera identifiers during training.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *List[str]:* Selected camera identifiers.
+
+**Data Type:** `List[str]`
+
+#### __str__
+**GitHub:** [__str__](https://your.repo.url/NuscData.__str__-placeholder)  
+**Purpose:**  
+Returns a string representation summarizing the dataset.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *String:* Summary including the number of samples, split type, and augmentation configuration.
+
+**Data Type:** `str`
+
+#### __len__
+**GitHub:** [__len__](https://your.repo.url/NuscData.__len__-placeholder)  
+**Purpose:**  
+Returns the number of samples in the dataset.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Integer:* Total number of samples.
+
+**Data Type:** `int`
 
 ---
 
-### Class [VizData](https://your.repo.url/VizData-placeholder)
-Inherits from `NuscData` for visualization purposes.
+### VizData
+Inherits from `NuscData` for visualization purposes.  
+**GitHub:** [VizData](https://your.repo.url/VizData-placeholder)
 
-#### Method [__init__](https://your.repo.url/VizData.__init__-placeholder)
-- **Purpose:** Inherits and initializes all properties from `NuscData`.
-- **Parameters:**  
-  - Inherits all parameters from `NuscData.__init__`.
-- **Output:**  
-  - An instance of `VizData`.
-- **Data Type:** Instance of `VizData`
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/VizData.__init__-placeholder)  
+**Purpose:**  
+Inherits and initializes all properties from `NuscData`.
 
-#### Method [__getitem__](https://your.repo.url/VizData.__getitem__-placeholder)
-- **Purpose:** Retrieves a complete sample for visualization including image data, LiDAR data, and the binary BEV image.
-- **Parameters:**
-  - `index` (*int*): Index of the sample.
-- **Output:**  
-  - *Tuple:* `(imgs, rots, trans, intrins, post_rots, post_trans, lidar_data, binimg)`
-    - `imgs` (*torch.Tensor*): Augmented images.
-    - `rots` (*torch.Tensor*): Rotation matrices.
-    - `trans` (*torch.Tensor*): Translation vectors.
-    - `intrins` (*torch.Tensor*): Camera intrinsics.
-    - `post_rots` (*torch.Tensor*): Post-augmentation rotations.
-    - `post_trans` (*torch.Tensor*): Post-augmentation translations.
-    - `lidar_data` (*torch.Tensor*): LiDAR point cloud.
-    - `binimg` (*torch.Tensor*): Binary BEV image.
-- **Data Type:** `Tuple`
+**Parameters:**  
+- Inherits all parameters from `NuscData.__init__`.
 
----
+**Output:**  
+- An instance of `VizData`.
 
-### Class [SegmentationData](https://your.repo.url/SegmentationData-placeholder)
-Specialized for segmentation tasks; inherits from `NuscData`.
+**Data Type:** Instance of `VizData`
 
-#### Method [__init__](https://your.repo.url/SegmentationData.__init__-placeholder)
-- **Purpose:** Inherits initialization from `NuscData`.
-- **Parameters:**  
-  - Inherits all parameters from `NuscData.__init__`.
-- **Output:**  
-  - An instance of `SegmentationData`.
-- **Data Type:** Instance of `SegmentationData`
+#### __getitem__
+**GitHub:** [__getitem__](https://your.repo.url/VizData.__getitem__-placeholder)  
+**Purpose:**  
+Retrieves a complete sample for visualization including image data, LiDAR data, and the binary BEV image.
 
-#### Method [__getitem__](https://your.repo.url/SegmentationData.__getitem__-placeholder)
-- **Purpose:** Retrieves a sample for segmentation tasks including image and BEV data.
-- **Parameters:**
-  - `index` (*int*): Index of the sample.
-- **Output:**  
-  - *Tuple:* `(imgs, rots, trans, intrins, post_rots, post_trans, binimg)`
-- **Data Type:** `Tuple`
+**Parameters:**
+- `index` (*int*): Index of the sample.
+
+**Output:**  
+- *Tuple:* `(imgs, rots, trans, intrins, post_rots, post_trans, lidar_data, binimg)` where:
+  - `imgs` (*torch.Tensor*): Augmented images.
+  - `rots` (*torch.Tensor*): Rotation matrices.
+  - `trans` (*torch.Tensor*): Translation vectors.
+  - `intrins` (*torch.Tensor*): Camera intrinsics.
+  - `post_rots` (*torch.Tensor*): Post-augmentation rotations.
+  - `post_trans` (*torch.Tensor*): Post-augmentation translations.
+  - `lidar_data` (*torch.Tensor*): LiDAR point cloud.
+  - `binimg` (*torch.Tensor*): Binary BEV image.
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
 
 ---
 
-### Function [worker_rnd_init](https://your.repo.url/worker_rnd_init-placeholder)
-- **Purpose:** Initializes a random seed for data loader workers to ensure reproducibility.
-- **Parameters:**
-  - `x` (*int*): Worker index.
-- **Output:**  
-  - None (side-effect: sets the NumPy random seed).
-- **Data Type:** `None`
+### SegmentationData
+Specialized for segmentation tasks; inherits from `NuscData`.  
+**GitHub:** [SegmentationData](https://your.repo.url/SegmentationData-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/SegmentationData.__init__-placeholder)  
+**Purpose:**  
+Inherits initialization from `NuscData`.
+
+**Parameters:**  
+- Inherits all parameters from `NuscData.__init__`.
+
+**Output:**  
+- An instance of `SegmentationData`.
+
+**Data Type:** Instance of `SegmentationData`
+
+#### __getitem__
+**GitHub:** [__getitem__](https://your.repo.url/SegmentationData.__getitem__-placeholder)  
+**Purpose:**  
+Retrieves a sample for segmentation tasks including image data and the BEV binary image.
+
+**Parameters:**
+- `index` (*int*): Index of the sample.
+
+**Output:**  
+- *Tuple:* `(imgs, rots, trans, intrins, post_rots, post_trans, binimg)`
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
 
 ---
 
-### Function [compile_data](https://your.repo.url/compile_data-placeholder)
-- **Purpose:** Compiles training and validation DataLoaders.
-- **Parameters:**
-  - `version` (*str*): Dataset version (e.g., `'trainval'`, `'mini'`).
-  - `dataroot` (*str*): Path to the dataset root.
-  - `data_aug_conf` (*dict*): Data augmentation configuration.
-  - `grid_conf` (*dict*): Grid configuration for BEV.
-  - `bsz` (*int*): Batch size.
-  - `nworkers` (*int*): Number of workers.
-  - `parser_name` (*str*): Specifies which parser to use (`'vizdata'` or `'segmentationdata'`).
-- **Output:**  
-  - *Tuple:* `(trainloader, valloader)` – PyTorch DataLoader instances.
-- **Data Type:** `Tuple[DataLoader, DataLoader]`
+### worker_rnd_init
+**GitHub:** [worker_rnd_init](https://your.repo.url/worker_rnd_init-placeholder)  
+**Purpose:**  
+Initializes a random seed for data loader workers to ensure reproducibility.
+
+**Parameters:**
+- `x` (*int*): Worker index.
+
+**Output:**  
+- *Returns:* `None` (side-effect: sets the NumPy random seed).
+
+**Data Type:** `None`
+
+---
+
+### compile_data
+**GitHub:** [compile_data](https://your.repo.url/compile_data-placeholder)  
+**Purpose:**  
+Compiles training and validation DataLoaders.
+
+**Parameters:**
+- `version` (*str*): Dataset version (e.g., `'trainval'`, `'mini'`).
+- `dataroot` (*str*): Path to the dataset root.
+- `data_aug_conf` (*dict*): Data augmentation configuration.
+- `grid_conf` (*dict*): Grid configuration for BEV.
+- `bsz` (*int*): Batch size.
+- `nworkers` (*int*): Number of workers.
+- `parser_name` (*str*): Specifies which parser to use (`'vizdata'` or `'segmentationdata'`).
+
+**Output:**  
+- *Tuple:* `(trainloader, valloader)` – PyTorch DataLoader instances.
+
+**Data Type:** `Tuple[DataLoader, DataLoader]`
 
 ---
 
 ## fisheye_data.py Module (KITTI-360 Fisheye Data Loader)
 
-### Class [KittiData](https://your.repo.url/KittiData-placeholder)
-A PyTorch dataset class designed for the KITTI-360 dataset with fisheye camera support.
+### KittiData
+A PyTorch dataset class designed for the KITTI-360 dataset with fisheye camera support.  
+**GitHub:** [KittiData](https://your.repo.url/KittiData-placeholder)
 
-#### Method [__init__](https://your.repo.url/KittiData.__init__-placeholder)
-- **Purpose:** Initializes the dataset by:
-  - Setting environment paths (expects `KITTI360_DATASET` to be set).
-  - Loading sequences, poses, and annotations.
-  - Computing the BEV grid and additional transformation matrices.
-- **Parameters:**
-  - `is_train` (*bool*): Training mode flag.
-  - `data_aug_conf` (*dict*): Data augmentation parameters.
-  - `grid_conf` (*dict*): Grid configuration (boundaries and resolution).
-  - `is_aug` (*bool*, optional): Whether to use additional augmentation (default is `False`).
-- **Output:**  
-  - An instance of `KittiData`.
-- **Data Type:** Instance of `KittiData`
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/KittiData.__init__-placeholder)  
+**Purpose:**  
+Initializes the dataset by:
+- Setting environment paths (expects `KITTI360_DATASET` to be set).
+- Loading sequences, poses, and annotations.
+- Computing the BEV grid and additional transformation matrices.
 
-#### Method [shift_origin](https://your.repo.url/KittiData.shift_origin-placeholder)
-- **Purpose:** Applies an additional shift transformation to the BEV coordinate system.
-- **Parameters:**
-  - `x` (*float*, default `-0.81`): Shift along the X-axis.
-  - `y` (*float*, default `-0.32`): Shift along the Y-axis.
-  - `z` (*float*, default `-0.9`): Shift along the Z-axis.
-- **Output:**  
-  - *NumPy array:* 4×4 transformation matrix.
-- **Data Type:** `np.ndarray`
+**Parameters:**
+- `is_train` (*bool*): Training mode flag.
+- `data_aug_conf` (*dict*): Data augmentation parameters.
+- `grid_conf` (*dict*): Grid configuration (boundaries and resolution).
+- `is_aug` (*bool*, optional): Whether to use additional augmentation (default is `False`).
 
-#### Method [get_sequences](https://your.repo.url/KittiData.get_sequences-placeholder)
-- **Purpose:** Retrieves and splits sequence names into training and validation sets.
-- **Parameters:**
-  - `val_idxs` (*List[int]*, optional): Indices to designate validation sequences (default `[8]`).
-- **Output:**  
-  - *List:* Sequence names for the current mode (training or validation).
-- **Data Type:** `List[str]`
+**Output:**  
+- An instance of `KittiData`.
 
-#### Method [prepro](https://your.repo.url/KittiData.prepro-placeholder)
-- **Purpose:** Processes sequences by:
-  - Loading poses from text files.
-  - Aligning frames with poses.
-  - Packaging the data into a structured NumPy array.
-- **Parameters:** None.
-- **Output:**  
-  - *NumPy structured array:* Contains `sequence` (str), `frame` (str), and `pose` (4×4 flattened, float32).
-- **Data Type:** `np.ndarray`
+**Data Type:** Instance of `KittiData`
 
-#### Method [get_bboxes](https://your.repo.url/KittiData.get_bboxes-placeholder)
-- **Purpose:** Loads 3D bounding box annotations for each sequence.
-- **Parameters:**
-  - `sequences` (*List[str]*): List of sequence names.
-- **Output:**  
-  - *Dictionary:* Mapping sequence names to their bounding box objects.
-- **Data Type:** `Dict[str, Any]`
+#### shift_origin
+**GitHub:** [shift_origin](https://your.repo.url/KittiData.shift_origin-placeholder)  
+**Purpose:**  
+Applies an additional shift transformation to the BEV coordinate system.
 
-#### Method [sample_augmentation](https://your.repo.url/KittiData.sample_augmentation-placeholder)
-- **Purpose:** Computes image augmentation parameters (resize, crop, flip, rotation) similar to `NuscData` but tailored for KITTI-360.
-- **Parameters:** None.
-- **Output:**  
-  - *Tuple:* `(resize, resize_dims, crop, flip, rotate)`
-- **Data Type:** `Tuple`
+**Parameters:**
+- `x` (*float*, default `-0.81`): Shift along the X-axis.
+- `y` (*float*, default `-0.32`): Shift along the Y-axis.
+- `z` (*float*, default `-0.9`): Shift along the Z-axis.
 
-#### Method [get_aug_image_data](https://your.repo.url/KittiData.get_aug_image_data-placeholder)
-- **Purpose:** Retrieves and augments image data using fisheye camera calibration parameters.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-  - `cams` (*dict*): Dictionary of camera objects.
-- **Output:**  
-  - *Tuple:* Contains augmented images, rotation matrices, translation vectors, intrinsic parameters, and post-augmentation matrices.
-- **Data Type:** `Tuple[torch.Tensor, ...]`
+**Output:**  
+- *NumPy array:* 4×4 transformation matrix.
 
-#### Method [get_image_data](https://your.repo.url/KittiData.get_image_data-placeholder)
-- **Purpose:** Loads image data from the KITTI-360 dataset, handling fisheye distortions and camera projection.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-  - `cams` (*dict*): Dictionary mapping camera identifiers to fisheye camera objects.
-- **Output:**  
-  - *Tuple:* `(imgs, rots, trans, intrinsics, distortions, xis)`
-    - `imgs` (*torch.Tensor*): Normalized image tensors.
-    - `rots` (*torch.Tensor*): Rotation matrices.
-    - `trans` (*torch.Tensor*): Translation vectors.
-    - `intrinsics` (*torch.Tensor*): Intrinsic parameter vectors.
-    - `distortions` (*torch.Tensor*): Distortion coefficients.
-    - `xis` (*torch.Tensor*): Fisheye-specific xi parameter.
-- **Data Type:** `Tuple[torch.Tensor, ...]`
+**Data Type:** `np.ndarray`
 
-#### Method [get_lidar_data](https://your.repo.url/KittiData.get_lidar_data-placeholder)
-- **Purpose:** Retrieves LiDAR data for a given sample.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-  - `nsweeps` (*int*): Number of LiDAR sweeps.
-- **Output:**  
-  - *Tensor:* LiDAR point cloud (first 3 dimensions: x, y, z).
-- **Data Type:** `torch.Tensor`
+#### get_sequences
+**GitHub:** [get_sequences](https://your.repo.url/KittiData.get_sequences-placeholder)  
+**Purpose:**  
+Retrieves and splits sequence names into training and validation sets.
 
-#### Method [get_binimg](https://your.repo.url/KittiData.get_binimg-placeholder)
-- **Purpose:** Generates a binary BEV image by transforming 3D bounding boxes to the BEV plane.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-- **Output:**  
-  - *Tensor:* Binary BEV image.
-- **Data Type:** `torch.Tensor`
+**Parameters:**
+- `val_idxs` (*List[int]*, optional): Indices to designate validation sequences (default `[8]`).
 
-#### Method [get_cams](https://your.repo.url/KittiData.get_cams-placeholder)
-- **Purpose:** Selects the camera objects based on the configuration and whether augmentation is applied.
-- **Parameters:** None.
-- **Output:**  
-  - *Dictionary:* Mapping camera identifiers to fisheye camera objects.
-- **Data Type:** `Dict[str, Any]`
+**Output:**  
+- *List:* Sequence names for the current mode.
 
-#### Method [__str__](https://your.repo.url/KittiData.__str__-placeholder)
-- **Purpose:** Returns a summary string representation of the dataset.
-- **Parameters:** None.
-- **Output:**  
-  - *String:* Summary including sample count, mode, and augmentation configuration.
-- **Data Type:** `str`
+**Data Type:** `List[str]`
 
-#### Method [__len__](https://your.repo.url/KittiData.__len__-placeholder)
-- **Purpose:** Returns the total number of samples.
-- **Parameters:** None.
-- **Output:**  
-  - *Integer:* Total sample count.
-- **Data Type:** `int`
+#### prepro
+**GitHub:** [prepro](https://your.repo.url/KittiData.prepro-placeholder)  
+**Purpose:**  
+Processes sequences by loading poses from text files, aligning frames with poses, and packaging the data into a structured NumPy array.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *NumPy structured array:* Contains `sequence` (*str*), `frame` (*str*), and `pose` (4×4 flattened, *float32*).
+
+**Data Type:** `np.ndarray`
+
+#### get_bboxes
+**GitHub:** [get_bboxes](https://your.repo.url/KittiData.get_bboxes-placeholder)  
+**Purpose:**  
+Loads 3D bounding box annotations for each sequence.
+
+**Parameters:**
+- `sequences` (*List[str]*): List of sequence names.
+
+**Output:**  
+- *Dictionary:* Mapping sequence names to their bounding box objects.
+
+**Data Type:** `Dict[str, Any]`
+
+#### sample_augmentation
+**GitHub:** [sample_augmentation](https://your.repo.url/KittiData.sample_augmentation-placeholder)  
+**Purpose:**  
+Computes image augmentation parameters (resize, crop, flip, rotation) similar to `NuscData` but tailored for KITTI-360.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Tuple:* `(resize, resize_dims, crop, flip, rotate)`
+
+**Data Type:** `Tuple`
+
+#### get_aug_image_data
+**GitHub:** [get_aug_image_data](https://your.repo.url/KittiData.get_aug_image_data-placeholder)  
+**Purpose:**  
+Retrieves and augments image data using fisheye camera calibration parameters.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+- `cams` (*dict*): Dictionary of camera objects.
+
+**Output:**  
+- *Tuple:* Contains augmented images, rotation matrices, translation vectors, intrinsic parameters, and post-augmentation matrices.
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
+
+#### get_image_data
+**GitHub:** [get_image_data](https://your.repo.url/KittiData.get_image_data-placeholder)  
+**Purpose:**  
+Loads image data from the KITTI-360 dataset, handling fisheye distortions and camera projection.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+- `cams` (*dict*): Dictionary mapping camera identifiers to fisheye camera objects.
+
+**Output:**  
+- *Tuple:* `(imgs, rots, trans, intrinsics, distortions, xis)` where:
+  - `imgs` (*torch.Tensor*): Normalized image tensors.
+  - `rots` (*torch.Tensor*): Rotation matrices.
+  - `trans` (*torch.Tensor*): Translation vectors.
+  - `intrinsics` (*torch.Tensor*): Intrinsic parameter vectors.
+  - `distortions` (*torch.Tensor*): Distortion coefficients.
+  - `xis` (*torch.Tensor*): Fisheye-specific xi parameter.
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
+
+#### get_lidar_data
+**GitHub:** [get_lidar_data](https://your.repo.url/KittiData.get_lidar_data-placeholder)  
+**Purpose:**  
+Retrieves LiDAR data for a given sample.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+- `nsweeps` (*int*): Number of LiDAR sweeps.
+
+**Output:**  
+- *Tensor:* LiDAR point cloud (first 3 dimensions: x, y, z).
+
+**Data Type:** `torch.Tensor`
+
+#### get_binimg
+**GitHub:** [get_binimg](https://your.repo.url/KittiData.get_binimg-placeholder)  
+**Purpose:**  
+Generates a binary BEV image by transforming 3D bounding boxes to the BEV plane.
+
+**Parameters:**
+- `rec` (*dict*): A sample record.
+
+**Output:**  
+- *Tensor:* Binary BEV image.
+
+**Data Type:** `torch.Tensor`
+
+#### get_cams
+**GitHub:** [get_cams](https://your.repo.url/KittiData.get_cams-placeholder)  
+**Purpose:**  
+Selects the camera objects based on the configuration and whether augmentation is applied.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Dictionary:* Mapping camera identifiers to fisheye camera objects.
+
+**Data Type:** `Dict[str, Any]`
+
+#### __str__
+**GitHub:** [__str__](https://your.repo.url/KittiData.__str__-placeholder)  
+**Purpose:**  
+Returns a summary string representation of the dataset.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *String:* Summary including sample count, mode, and augmentation configuration.
+
+**Data Type:** `str`
+
+#### __len__
+**GitHub:** [__len__](https://your.repo.url/KittiData.__len__-placeholder)  
+**Purpose:**  
+Returns the total number of samples.
+
+**Parameters:**  
+None.
+
+**Output:**  
+- *Integer:* Total sample count.
+
+**Data Type:** `int`
 
 ---
 
-### Class [VizData (KITTI-360)](https://your.repo.url/VizDataKitti-placeholder)
-Specialized for visualization, extends `KittiData` and provides additional BEV map functionalities.
+### VizData (KITTI-360)
+Specialized for visualization; extends `KittiData` and provides additional BEV map functionalities.  
+**GitHub:** [VizData (KITTI-360)](https://your.repo.url/VizDataKitti-placeholder)
 
-#### Method [__init__](https://your.repo.url/VizDataKitti.__init__-placeholder)
-- **Purpose:** Initializes the visualization dataset, inheriting properties from `KittiData`.
-- **Parameters:**  
-  - Inherits all parameters from `KittiData.__init__`.
-- **Output:**  
-  - An instance of `VizData` for KITTI-360.
-- **Data Type:** Instance of `VizData`
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/VizDataKitti.__init__-placeholder)  
+**Purpose:**  
+Initializes the visualization dataset, inheriting properties from `KittiData`.
 
-#### Method [get_colored_binimg](https://your.repo.url/VizDataKitti.get_colored_binimg-placeholder)
-- **Purpose:** Generates a colored BEV map by overlaying fisheye coverage, ego-vehicle visualization, and annotated objects.
-- **Parameters:**
-  - `rec` (*dict*): A sample record.
-  - `cams` (*dict*): Dictionary of camera objects.
-- **Output:**  
-  - *Tensor:* Colored BEV image.
-- **Data Type:** `torch.Tensor`
+**Parameters:**  
+- Inherits all parameters from `KittiData.__init__`.
 
-#### Method [__getitem__](https://your.repo.url/VizDataKitti.__getitem__-placeholder)
-- **Purpose:** Retrieves a complete sample for visualization including:
-  - Image data.
-  - Camera extrinsic/intrinsic parameters.
-  - Binary and colored BEV maps.
-- **Parameters:**
-  - `index` (*int*): Index of the sample.
-- **Output:**  
-  - *Tuple:* `(imgs, rots, trans, K, D, xi, binimg, colored_binimg)`
-- **Data Type:** `Tuple[torch.Tensor, ...]`
+**Output:**  
+- An instance of `VizData` for KITTI-360.
 
----
+**Data Type:** Instance of `VizData`
 
-### Class [SegmentationData (KITTI-360)](https://your.repo.url/SegmentationDataKitti-placeholder)
-Specialized for segmentation tasks on KITTI-360 data, extends `KittiData`.
+#### get_colored_binimg
+**GitHub:** [get_colored_binimg](https://your.repo.url/VizDataKitti.get_colored_binimg-placeholder)  
+**Purpose:**  
+Generates a colored BEV map by overlaying fisheye coverage, ego-vehicle visualization, and annotated objects.
 
-#### Method [__init__](https://your.repo.url/SegmentationDataKitti.__init__-placeholder)
-- **Purpose:** Inherits initialization from `KittiData`.
-- **Parameters:**  
-  - Inherits all parameters from `KittiData.__init__`.
-- **Output:**  
-  - An instance of `SegmentationData`.
-- **Data Type:** Instance of `SegmentationData`
+**Parameters:**
+- `rec` (*dict*): A sample record.
+- `cams` (*dict*): Dictionary of camera objects.
 
-#### Method [__getitem__](https://your.repo.url/SegmentationDataKitti.__getitem__-placeholder)
-- **Purpose:** Retrieves a segmentation sample including image data and the binary BEV map.
-- **Parameters:**
-  - `index` (*int*): Index of the sample.
-- **Output:**  
-  - *Tuple:* `(imgs, rots, trans, K, D, xi, binimg)`
-- **Data Type:** `Tuple[torch.Tensor, ...]`
+**Output:**  
+- *Tensor:* Colored BEV image.
+
+**Data Type:** `torch.Tensor`
+
+#### __getitem__
+**GitHub:** [__getitem__](https://your.repo.url/VizDataKitti.__getitem__-placeholder)  
+**Purpose:**  
+Retrieves a complete sample for visualization including:
+- Image data.
+- Camera extrinsic/intrinsic parameters.
+- Binary and colored BEV maps.
+
+**Parameters:**
+- `index` (*int*): Index of the sample.
+
+**Output:**  
+- *Tuple:* `(imgs, rots, trans, K, D, xi, binimg, colored_binimg)`
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
 
 ---
 
-### Function [worker_rnd_init (KITTI-360)](https://your.repo.url/worker_rnd_initKitti-placeholder)
-- **Purpose:** Initializes the random seed for KITTI-360 data loader workers.
-- **Parameters:**
-  - `x` (*int*): Worker index.
-- **Output:**  
-  - None (side-effect: sets NumPy random seed).
-- **Data Type:** `None`
+### SegmentationData (KITTI-360)
+Specialized for segmentation tasks on KITTI-360 data; extends `KittiData`.  
+**GitHub:** [SegmentationData (KITTI-360)](https://your.repo.url/SegmentationDataKitti-placeholder)
+
+#### __init__
+**GitHub:** [__init__](https://your.repo.url/SegmentationDataKitti.__init__-placeholder)  
+**Purpose:**  
+Inherits initialization from `KittiData`.
+
+**Parameters:**  
+- Inherits all parameters from `KittiData.__init__`.
+
+**Output:**  
+- An instance of `SegmentationData`.
+
+**Data Type:** Instance of `SegmentationData`
+
+#### __getitem__
+**GitHub:** [__getitem__](https://your.repo.url/SegmentationDataKitti.__getitem__-placeholder)  
+**Purpose:**  
+Retrieves a segmentation sample including image data and the binary BEV map.
+
+**Parameters:**
+- `index` (*int*): Index of the sample.
+
+**Output:**  
+- *Tuple:* `(imgs, rots, trans, K, D, xi, binimg)`
+
+**Data Type:** `Tuple[torch.Tensor, ...]`
 
 ---
 
-### Function [compile_data (KITTI-360)](https://your.repo.url/compile_dataKitti-placeholder)
-- **Purpose:** Compiles training and validation DataLoaders for the KITTI-360 fisheye data.
-- **Parameters:**
-  - `data_aug_conf` (*dict*): Data augmentation configuration.
-  - `grid_conf` (*dict*): BEV grid configuration.
-  - `is_aug` (*bool*): Flag indicating whether additional augmentation is used.
-  - `bsz` (*int*): Batch size.
-  - `nworkers` (*int*): Number of workers.
-  - `parser_name` (*str*): Specifies parser type (`'vizdata'` or `'segmentationdata'`).
-- **Output:**  
-  - *Tuple:* `(trainloader, valloader)` – PyTorch DataLoader instances.
-- **Data Type:** `Tuple[DataLoader, DataLoader]`
+### worker_rnd_init (KITTI-360)
+**GitHub:** [worker_rnd_init (KITTI-360)](https://your.repo.url/worker_rnd_initKitti-placeholder)  
+**Purpose:**  
+Initializes the random seed for KITTI-360 data loader workers.
+
+**Parameters:**
+- `x` (*int*): Worker index.
+
+**Output:**  
+- *Returns:* `None` (side-effect: sets NumPy random seed).
+
+**Data Type:** `None`
+
+---
+
+### compile_data (KITTI-360)
+**GitHub:** [compile_data (KITTI-360)](https://your.repo.url/compile_dataKitti-placeholder)  
+**Purpose:**  
+Compiles training and validation DataLoaders for the KITTI-360 fisheye data.
+
+**Parameters:**
+- `data_aug_conf` (*dict*): Data augmentation configuration.
+- `grid_conf` (*dict*): BEV grid configuration.
+- `is_aug` (*bool*): Flag indicating whether additional augmentation is used.
+- `bsz` (*int*): Batch size.
+- `nworkers` (*int*): Number of workers.
+- `parser_name` (*str*): Specifies parser type (`'vizdata'` or `'segmentationdata'`).
+
+**Output:**  
+- *Tuple:* `(trainloader, valloader)` – PyTorch DataLoader instances.
+
+**Data Type:** `Tuple[DataLoader, DataLoader]`
 
 ---
 
