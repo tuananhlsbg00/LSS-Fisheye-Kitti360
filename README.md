@@ -7,21 +7,22 @@ This document provides detailed documentation for the modified in the Lift-Splat
 
 The documentation covers five main modules:
 
-- **data.py** – The original implementation for the NuScenes dataset.
-- **fisheye_data.py** – The modified implementation for the KITTI-360 dataset with Fisheye cameras.
-- **model.py** -  The original implementation for the NuScenes dataset.
-- **fisheye_model.py** - The modified implementation for the KITTI-360 dataset with Fisheye cameras.
-- **BEVSegmentation.py** - Helper fucntions to load Bird-eye-view segmentation ground truth.
+- **data.py** - The original implementation of map-style data loader for the NuScenes dataset.
+- **model.py** - The original implementation of LSS model for the NuScenes dataset.
+- **src_fisheye/data.py** - The modified implementation of map-style data loader for the KITTI-360 dataset with Fisheye cameras.
+- **src_fisheye/model.py** - The modified implementation LSS model for the KITTI-360 dataset with Fisheye cameras.
+- **src_fisheye/kitti360scripts/BEVSegmentation.py** - Helper fucntions to load Bird-eye-view segmentation ground truth.
 
 
-> **Note:** For Classes, Methods, Functions which have minors or no change at all might not be mentioned, especially in fisheye_data.py and fisheye_model.py
+> **Note:** For some Classes, Methods, or Functions which have minor or no change at all might not be mentioned, especially in modified data module and model module
 
 ---
 
 
-## Table of Contents
-
-  
+<details>
+  <summary>
+	  <h1>Table of content</h1>
+  </summary>
 
 - [0. Overview](#0.)
 
@@ -67,7 +68,7 @@ The documentation covers five main modules:
 
 	- [1.5 compile_data](#1.5)
 
-- [2. fisheye_data.py Module (KITTI-360 Fisheye Data Loader)](#2.)
+- [2. KITTI-360 Fisheye Data Loader(src_fisheye/data.py)](#2.)
 
 	- [2.1 KittiData](#2.1)
 
@@ -99,7 +100,7 @@ The documentation covers five main modules:
 
 		- [2.3.2 \_\_getitem__](#2.3.2)
 
-- [3. model.py Module (Pinhole Cameras)](#3.)
+- [3. Original LSS model (models.py)](#3.)
 		
 	- [3.1 Up](#3.1)
 
@@ -143,7 +144,7 @@ The documentation covers five main modules:
 
 	- [3.5 compile_model](#3.5)
 
-- [4. fisheye_model.py Module (Fisheye Cameras)](#4.)
+- [4. LSS-Fisheye (src_fisheye.py)](#4.)
 
 	- [4.1 LiftSplatShoot](#4.1)
 
@@ -172,6 +173,7 @@ The documentation covers five main modules:
 	- [5.7 draw_ego_vehicle](#5.7)
 
 	- [5.8 draw_fisheye_coverage](#5.8)
+</details>
 
 ---
 
@@ -179,7 +181,7 @@ The documentation covers five main modules:
 
 The modifications include:
 - **Data Format Adaptation:**  
-  The original `data.py` is tailored for the NuScenes dataset. The modified `fisheye_data.py` supports the KITTI-360 format and Fisheye cameras, incorporating necessary changes in file paths, calibration, and annotations.
+  The original `data.py` is tailored for the NuScenes dataset. The modified `data.py` supports the KITTI-360 format and Fisheye cameras, incorporating necessary changes in file paths, calibration and ditortion parameters, and annotations.
   
 - **Camera & Annotation Handling:**  
   In the KITTI-360 version, new helper modules (e.g., `CameraFisheye`, `Annotation3D`) are used to handle camera models, fisheye distortions, and 3D annotations.
@@ -187,14 +189,15 @@ The modifications include:
 - **BEV Generation:**  
   Binary and colored Bird’s-Eye View (BEV) maps are generated using different strategies tailored to each dataset.
   
+- **LSS-Fisheye model (main contribution)**
+ Introduce methods to handle  MEI-model fisheye distortions and unprojection in parallel (ensure this step is differentiable), mask building to handle out-of-bound pixels, and geometry adjustments specific to fisheye cameras.
+  
 - **BEVSegmentation:**
  This module contains a collection of helper functions used to generate Bird’s-Eye View (BEV) segmentation maps from KITTI-360 data. These functions support tasks such as loading poses, color assignment, geometric transformations, and drawing on BEV maps.
-- **LSS-Fisheye model**
- Adapts original methods to handle fisheye distortions with additional functions for unprojection (using a differentiable MEI-model), mask building for fisheye circles, and geometry adjustments specific to fisheye cameras.
 
 ---
 
-## <a id="1."></a> 1. NuScenes Data Loader (original)
+## <a id="1."></a> 1. NuScenes Data Loader (Original)
 
 ### <a id="1.1"></a> 1.1 NuscData
 A PyTorch map-style dataset class that loads and preprocesses data from the NuScenes dataset.  
@@ -469,7 +472,7 @@ Compiles training and validation DataLoaders.
 
 ---
 
-## <a id="2."></a> 2. fisheye_data.py Module (KITTI-360 Fisheye Data Loader)
+## <a id="2."></a> 2. KITTI-360 Fisheye Data Loader (src_fisheye/data.py)
 
 ### <a id="2.1"></a> 2.1 KittiData
 A PyTorch dataset class designed for the KITTI-360 dataset with fisheye camera support.  
@@ -664,7 +667,7 @@ Retrieves a segmentation sample including image data and the binary BEV map.
 
 ---
 
-## <a id="3."></a> 3. model.py Module (Pinhole Cameras)
+## <a id="3."></a> 3. Original LSS model (model.py)
 
 ### <a id="3.1"></a>  3.1 Up
 A module for upsampling and feature fusion.  
@@ -914,7 +917,7 @@ Helper function that instantiates and returns a `LiftSplatShoot` model.
 
 ---
 
-## <a id="4."></a> 4. fisheye_model.py Module (Fisheye Cameras)
+## <a id="4."></a> 4. LSS-Fisheye model (src_fisheye/models.py)
 
 ### <a id="4.1"></a> 4.1 LiftSplatShoot
 A specialized model to handle fisheye camera distortions with additional methods.  
