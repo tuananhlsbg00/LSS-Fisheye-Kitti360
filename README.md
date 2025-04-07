@@ -1,6 +1,6 @@
 # LSS-Fisheye Documentation
 
-This document provides detailed documentation for the modified in the Lift-Splat-Shoot-Fisheye project and briefly document the original scripts to highlight our works. The modifications enable support for Fisheye cameras using the KITTI-360 dataset, while retaining the original NuScenes data loader for legacy use.
+This document provides detailed documentation for the modified in the Lift-Splat-Shoot-Fisheye project and briefly document the original scripts to highlight our works. The modifications enable support for Fisheye cameras using the KITTI-360 dataset, while retaining the original NuScenes data loader for legacy use. You can what demo [video](https://youtu.be/RE4L0fCjYTA) validate on sequence 10 of [KITTI 360 Dataset](https://www.cvlibs.net/datasets/kitti-360/).
 
 The documentation covers five main modules:
 
