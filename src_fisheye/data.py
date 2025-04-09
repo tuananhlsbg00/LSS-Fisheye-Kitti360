@@ -10,11 +10,6 @@ import numpy as np
 from PIL import Image
 import cv2
 from pyquaternion import Quaternion
-from nuscenes.nuscenes import NuScenes
-from nuscenes.utils.splits import create_splits_scenes
-from nuscenes.utils.data_classes import Box
-from glob import glob
-import time
 
 from tools import get_lidar_data, img_transform, normalize_img, gen_dx_bx
 from kitti360scripts.viewer.BEVSegmentation import (load_poses, transform_points,
@@ -22,7 +17,7 @@ from kitti360scripts.viewer.BEVSegmentation import (load_poses, transform_points
                                                     get_bottom_face, assign_color,
                                                     draw_fisheye_coverage, draw_ego_vehicle)
 from kitti360scripts.helpers.project import CameraFisheye
-from kitti360scripts.helpers.annotation import Annotation3D, local2global, global2local
+from kitti360scripts.helpers.annotation import Annotation3D
 
 class KittiData(torch.utils.data.Dataset):
     def __init__(self, is_train, data_aug_conf, grid_conf, is_aug=False):
@@ -33,17 +28,17 @@ class KittiData(torch.utils.data.Dataset):
             raise RuntimeError("Please set KITTI360_DATASET in your environment.")
 
 
-        self.bboxPath = os.path.join(self.kitti360Path, 'data_3d_bboxes')
-        self.posesPath = os.path.join(self.kitti360Path, 'data_poses')
+        self.bboxPath   = os.path.join(self.kitti360Path, 'data_3d_bboxes')
+        self.posesPath  = os.path.join(self.kitti360Path, 'data_poses')
         self.imagesPath = os.path.join(self.kitti360Path, 'data_2d_raw')
 
-        self.is_train = is_train
-        self.is_aug = is_aug
+        self.is_train      = is_train
+        self.is_aug        = is_aug
         self.data_aug_conf = data_aug_conf
-        self.grid_conf = grid_conf
+        self.grid_conf     = grid_conf
 
         self.sequences = self.get_sequences()
-        self.ixes = self.prepro()
+        self.ixes      = self.prepro()
 
         self.bboxes = self.get_bboxes(self.sequences)
 
@@ -307,10 +302,13 @@ class KittiData(torch.utils.data.Dataset):
 
 
 class VizData(KittiData):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cams_coverage=False, ego=True, *args, **kwargs):
+        self.cams_coverage = cams_coverage
+        self.ego = ego
         super(VizData, self).__init__(*args, **kwargs)
 
-    def get_colored_binimg(self, rec, cams):
+
+    def get_colored_binimg(self, rec, cams, cams_coverage=False, ego=True):
         T_imu_to_world = rec['pose'].reshape(4, 4)
         frame = int(rec['frame'][0:-4])
 
@@ -319,17 +317,14 @@ class VizData(KittiData):
 
         bev_map = np.zeros((self.nx[0], self.nx[1], 3), dtype=np.uint8)
 
-        cam_02 = cams['image_02']
-        cam_03 = cams['image_03']
+        if cams_coverage:
+            for cam in cams.values():
+                draw_fisheye_coverage(bev_map=bev_map, bev_min=self.bev_min,
+                                      bev_max=self.bev_max, bev_resolution=self.nx[0],
+                                      camera=cam, color=(162, 181, 224))
 
-        draw_fisheye_coverage(bev_map=bev_map, bev_min=self.bev_min,
-                              bev_max=self.bev_max, bev_resolution=self.nx[0],
-                              camera=cam_02, color=(162, 181, 224))
-
-        draw_fisheye_coverage(bev_map=bev_map, bev_min=self.bev_min,
-                              bev_max=self.bev_max, bev_resolution=self.nx[0],
-                              camera=cam_03, color=(162, 181, 224))
-        draw_ego_vehicle(bev_map)
+        if ego:
+            draw_ego_vehicle(bev_map)
 
         for globalId, bbox_dict in self.bboxes[rec['sequence']].items():
             for obj in bbox_dict.values():
@@ -370,7 +365,7 @@ class VizData(KittiData):
 
         binimg = self.get_binimg(rec)
 
-        colored_binimg = self.get_colored_binimg(rec, cams)
+        colored_binimg = self.get_colored_binimg(rec, cams, self.cams_coverage, self.ego)
 
         # if self.is_aug:
         #     imgs, rots, trans, intrins, post_rots, post_trans = self.get_aug_image_data(rec, cams)
@@ -444,8 +439,9 @@ if __name__ == '__main__':
     zbound = [  2.0, -2.0, 4.0]
     dbound = [  1.0, 14.0, 0.325]
 
-    dataset = VizData(False,
-                        data_aug_conf = {
+    dataset = VizData(cams_coverage=False,
+                      is_train     =False,
+                      data_aug_conf = {
                                         'resize_lim': resize_lim,
                                         'final_dim': final_dim,
                                         'rot_lim': rot_lim,
@@ -455,13 +451,13 @@ if __name__ == '__main__':
                                         'cams': ['image_02', 'image_03'],
                                         'Ncams': ncams,
                                         },
-                        grid_conf = {
+                      grid_conf = {
                                     'xbound': xbound,
                                     'ybound': ybound,
                                     'zbound': zbound,
                                     'dbound': dbound,
                                     }
-                        )
+                      )
 
 
 
@@ -479,12 +475,79 @@ if __name__ == '__main__':
 
     for i in range(0,len(dataset),1):
         imgs, rots, trans, K, D, xi, binimg, colored_binimg = dataset[i]
-
         print(i)#, imgs.shape, rots.shape, trans.shape, K.shape, D.shape, xi.shape, binimg.shape)
-        binimg = colored_binimg
+        binimg_np = colored_binimg.cpu().numpy().squeeze().astype(np.uint8)  # Now a NumPy array
         # Convert PIL Image to numpy array
         imgL_np = np.array(denormalize_img(imgs[0]))
         imgR_np = np.array(denormalize_img(imgs[1]))
+
+        H, W, C = binimg_np.shape
+        bev_min, bev_max = dataset.bev_min, dataset.bev_max
+
+        cam_02 = dataset.cams['image_02']
+        cam_03 = dataset.cams['image_03']
+
+        canvas = np.zeros_like(imgL_np)
+
+        ratio = final_dim[0]/1400
+
+        xs = np.linspace(bev_min, bev_max, W) + 0.81
+        ys = np.linspace(bev_min, bev_max, H) + 0.32
+        xv, yv = np.meshgrid(xs, ys)
+        zv = np.zeros_like(xv) + 0.9  # flat ground (or a fixed offset)
+        ones = np.ones_like(xv)
+        bev_coord_tensor = np.stack([xv, yv, zv, ones], axis=-1)  # (H, W, 4)
+
+        pts_egoL = bev_coord_tensor[:H//2, :, :].reshape(-1, 4).T  # shape (4, H*W)
+        pts_cam_02 = np.linalg.inv(cam_02.camToPose) @ pts_egoL  # (4, H*W)
+        pts_cam_02 = pts_cam_02[:3]  # Normalize homogeneous coordinates
+        Px, Py, _ = cam_02.cam2image(pts_cam_02)
+        Px, Py = Px*ratio, Py*ratio
+        Px, Py = Px.astype(np.uint16).reshape(H//2, W), Py.astype(np.uint16).reshape(H//2, W)
+        # print(np.max(Px), np.max(Py))
+        # quit()
+        # Px[Px < 0] = 0
+        Px[Px > 511] = 511
+        # Py[Py < 0] = 0
+        Py[Py > 511] = 511
+        colored_binimgL = np.transpose(binimg_np[:, :W//2, :], (1,0,2))[:,::-1,::-1]
+
+
+
+        canvas[Py, Px, :] = colored_binimgL
+        canvas[Py-1, Px, :] = colored_binimgL
+        canvas[Py, Px-1, :] = colored_binimgL
+        canvas[Py-1, Px-1, :] = colored_binimgL
+        canvas[Py, Px+1, :] = colored_binimgL
+        canvas[Py-1, Px+1, :] = colored_binimgL
+
+
+        imgL_np = cv2.addWeighted(canvas, 1, imgL_np, 0.8, 0)
+
+        canvas = np.zeros_like(imgR_np)
+
+        pts_egoR = bev_coord_tensor[H//2:, :, :].reshape(-1, 4).T  # shape (4, H*W)
+        pts_cam_03 = np.linalg.inv(cam_03.camToPose) @ pts_egoR  # (4, H*W)
+        pts_cam_03 = pts_cam_03[:3]  # Normalize homogeneous coordinates
+        Px, Py, _ = cam_03.cam2image(pts_cam_03)
+        Px, Py = Px*ratio, Py*ratio
+        Px, Py = Px.astype(np.uint16).reshape(H//2, W), Py.astype(np.uint16).reshape(H//2, W)
+        Px[Px > 511] = 511
+        Py[Py > 511] = 511
+        colored_binimgR = np.transpose(binimg_np[:, W//2:, :], (1,0,2))[:,::-1,::-1]
+
+
+
+        canvas[Py, Px, :] = colored_binimgR
+        canvas[Py-1, Px, :] = colored_binimgR
+        canvas[Py, Px-1, :] = colored_binimgR
+        canvas[Py-1, Px-1, :] = colored_binimgR
+        canvas[Py, Px+1, :] = colored_binimgR
+        canvas[Py-1, Px+1, :] = colored_binimgR
+
+
+        imgR_np = cv2.addWeighted(canvas, 1, imgR_np, 0.8, 0)
+
 
         # Define the radius
         radius = 512//2
@@ -500,7 +563,7 @@ if __name__ == '__main__':
         img_np = np.hstack((imgL_np, imgR_np))
 
         H, W, _ = img_np.shape
-        # img_np = cv2.resize(img_np, (W//2, H//2))
+        img_np = cv2.resize(img_np, (2000, 1000))
         # # Convert RGB to BGR for cv2.imshow (if needed)
         img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
 
@@ -508,12 +571,12 @@ if __name__ == '__main__':
 
         cv2.imshow('img', img_bgr)
         # If the tensor is on GPU, first call .cpu(), then .numpy().
-        binimg_np = colored_binimg.cpu().numpy().squeeze() .astype(np.uint8) # Now a NumPy array
         H, W, _ = binimg_np.shape
-        binimg_np = cv2.resize(binimg_np, (W*2, H*2))
+        binimg_np = cv2.resize(binimg_np[:, :H//2, :], (W, H*2))
 
         # binimg_np = np.clip(binimg_np, 0, 255).astype(np.uint8)
 
         cv2.imshow('bev_map', binimg_np)
+        cv2.imshow('canvas', canvas)
         if cv2.waitKey(50) & 0xFF == ord('q'):
             break
